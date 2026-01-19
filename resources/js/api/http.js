@@ -1,7 +1,5 @@
 export async function apiGet(path) {
-  const base = import.meta.env.VITE_API_URL;
-  const res = await fetch(`${base}${path}`, {
-    method: "GET",
+  const res = await fetch(path, {
     headers: { Accept: "application/json" },
   });
 
@@ -12,3 +10,4 @@ export async function apiGet(path) {
 
   return await res.json();
 }
+
