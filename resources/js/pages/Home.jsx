@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import CarCard from "../components/CarCard";
+import AuthModal from "../components/AuthModal";
 
 
 import { fetchCars } from "../api/cars";
@@ -10,6 +11,13 @@ export default function Home() {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authTab, setAuthTab] = useState("login");
+
+  const openLogin = () => { setAuthTab("login"); setAuthOpen(true); };
+  const openRegister = () => { setAuthTab("register"); setAuthOpen(true); };
+  const closeAuth = () => setAuthOpen(false);
+
 
   useEffect(() => {
     let alive = true;
@@ -36,7 +44,8 @@ export default function Home() {
 
   return (
     <>
-      <Header />
+      <Header onOpenLogin={openLogin} onOpenRegister={openRegister} />
+
       <main>
         <Hero />
 
@@ -93,6 +102,7 @@ export default function Home() {
           </div>
         </section>
       </main>
+      <AuthModal open={authOpen} initialTab={authTab} onClose={closeAuth} />
     </>
   );
 }
