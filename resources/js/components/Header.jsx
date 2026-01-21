@@ -1,4 +1,4 @@
-export default function Header() {
+export default function Header({ onOpenLogin, onOpenRegister }) {
   return (
     <header className="header">
       <div className="container header__inner">
@@ -11,10 +11,10 @@ export default function Header() {
         </nav>
 
         <div className="header__actions">
-          <button className="btn btn--ghost" type="button">
+          <button className="btn btn--ghost" type="button" onClick={onOpenLogin}>
             Вход
           </button>
-          <button className="btn" type="button">
+          <button className="btn" type="button" onClick={onOpenRegister}>
             Регистрация
           </button>
         </div>
