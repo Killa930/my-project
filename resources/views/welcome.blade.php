@@ -7,11 +7,9 @@
     <title>Laravel + React</title>
 
     @viteReactRefresh
-    @vite('resources/js/app.jsx')
+    @vite(['resources/css/app.css', 'resources/js/app.jsx'])
 </head>
 <body>
     <div id="app"></div>
-@vite(['resources/css/app.css', 'resources/js/app.jsx'])
-
 </body>
 </html>
