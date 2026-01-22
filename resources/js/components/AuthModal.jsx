@@ -40,7 +40,7 @@ export default function AuthModal({ open, initialTab = "login", onClose }) {
       console.log("LOGIN SUBMIT:", { loginEmail, loginPassword });
       onClose?.();
     } catch (err) {
-      setError(err?.message || "Ошибка входа");
+      setError(err?.message || "Radās kļūda");
     } finally {
       setLoading(false);
     }
@@ -51,17 +51,17 @@ export default function AuthModal({ open, initialTab = "login", onClose }) {
     resetError();
 
     if (regPassword !== regPassword2) {
-      setError("Пароли не совпадают");
+      setError("Paroles nesakrīt");
       return;
     }
 
     setLoading(true);
     try {
-      // TODO: подключим позже к Laravel Sanctum/регистрации
+      // TODO: vēlāk pieslēgsim Laravel Sanctum / reģistrāciju
       console.log("REGISTER SUBMIT:", { regName, regEmail, regPassword });
       onClose?.();
     } catch (err) {
-      setError(err?.message || "Ошибка регистрации");
+      setError(err?.message || "Reģistrācijas kļūda");
     } finally {
       setLoading(false);
     }
@@ -77,32 +77,33 @@ export default function AuthModal({ open, initialTab = "login", onClose }) {
               onClick={() => setTab("login")}
               type="button"
             >
-              Вход
+              Pieteikties
             </button>
             <button
               className={`tabBtn ${tab === "register" ? "isActive" : ""}`}
               onClick={() => setTab("register")}
               type="button"
             >
-              Регистрация
+              Reģistrācija
             </button>
           </div>
 
-          <button className="iconBtn" onClick={onClose} type="button" aria-label="Закрыть">
+          <button
+            className="iconBtn"
+            onClick={onClose}
+            type="button"
+            aria-label="Aizvērt"
+          >
             ✕
           </button>
         </div>
 
-        {error && (
-          <div className="modal__error">
-            {error}
-          </div>
-        )}
+        {error && <div className="modal__error">{error}</div>}
 
         {tab === "login" ? (
           <form className="form" onSubmit={handleLogin}>
             <label className="field">
-              <span className="field__label">Email</span>
+              <span className="field__label">E-pasts</span>
               <input
                 className="input"
                 type="email"
@@ -114,7 +115,7 @@ export default function AuthModal({ open, initialTab = "login", onClose }) {
             </label>
 
             <label className="field">
-              <span className="field__label">Пароль</span>
+              <span className="field__label">Parole</span>
               <input
                 className="input"
                 type="password"
@@ -126,31 +127,35 @@ export default function AuthModal({ open, initialTab = "login", onClose }) {
             </label>
 
             <button className="btn" disabled={loading} type="submit">
-              {loading ? "Входим..." : "Войти"}
+              {loading ? "Pieslēdzas..." : "Ieiet"}
             </button>
 
             <p className="muted small">
-              Нет аккаунта?{" "}
-              <button className="linkBtn" type="button" onClick={() => setTab("register")}>
-                Зарегистрироваться
+              Nav konta?{" "}
+              <button
+                className="linkBtn"
+                type="button"
+                onClick={() => setTab("register")}
+              >
+                Reģistrēties
               </button>
             </p>
           </form>
         ) : (
           <form className="form" onSubmit={handleRegister}>
             <label className="field">
-              <span className="field__label">Имя</span>
+              <span className="field__label">Vārds</span>
               <input
                 className="input"
                 value={regName}
                 onChange={(e) => setRegName(e.target.value)}
                 required
-                placeholder="Иван"
+                placeholder="Jānis"
               />
             </label>
 
             <label className="field">
-              <span className="field__label">Email</span>
+              <span className="field__label">E-pasts</span>
               <input
                 className="input"
                 type="email"
@@ -162,19 +167,19 @@ export default function AuthModal({ open, initialTab = "login", onClose }) {
             </label>
 
             <label className="field">
-              <span className="field__label">Пароль</span>
+              <span className="field__label">Parole</span>
               <input
                 className="input"
                 type="password"
                 value={regPassword}
                 onChange={(e) => setRegPassword(e.target.value)}
                 required
-                placeholder="Минимум 8 символов"
+                placeholder="Vismaz 8 rakstzīmes"
               />
             </label>
 
             <label className="field">
-              <span className="field__label">Повтор пароля</span>
+              <span className="field__label">Paroles atkārtojums</span>
               <input
                 className="input"
                 type="password"
@@ -186,13 +191,17 @@ export default function AuthModal({ open, initialTab = "login", onClose }) {
             </label>
 
             <button className="btn" disabled={loading} type="submit">
-              {loading ? "Создаём..." : "Создать аккаунт"}
+              {loading ? "Izveido..." : "Izveidot kontu"}
             </button>
 
             <p className="muted small">
-              Уже есть аккаунт?{" "}
-              <button className="linkBtn" type="button" onClick={() => setTab("login")}>
-                Войти
+              Jau ir konts?{" "}
+              <button
+                className="linkBtn"
+                type="button"
+                onClick={() => setTab("login")}
+              >
+                Ieiet
               </button>
             </p>
           </form>
