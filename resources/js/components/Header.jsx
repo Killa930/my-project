@@ -5,20 +5,25 @@ export default function Header({ onOpenLogin, onOpenRegister }) {
         <div className="logo">AutoSalon • BU</div>
 
         <nav className="nav">
-          <a href="#catalog">Каталог</a>
-          <a href="#about">О нас</a>
-          <a href="#contacts">Контакты</a>
+          <a href="#catalog">Katalogs</a>
+          <a href="#about">Par mums</a>
+          <a href="#contacts">Kontakti</a>
         </nav>
 
         <div className="header__actions">
-          <button className="btn btn--ghost" type="button" onClick={onOpenLogin}>
-            Вход
+          <button
+            className="btn btn--ghost"
+            type="button"
+            onClick={onOpenLogin}
+          >
+            Ieiet
           </button>
           <button className="btn" type="button" onClick={onOpenRegister}>
-            Регистрация
+            Reģistrācija
           </button>
         </div>
       </div>
     </header>
   );
 }
+
