@@ -4,7 +4,6 @@ import Hero from "../components/Hero";
 import CarCard from "../components/CarCard";
 import AuthModal from "../components/AuthModal";
 
-
 import { fetchCars } from "../api/cars";
 
 export default function Home() {
@@ -18,19 +17,18 @@ export default function Home() {
   const openRegister = () => { setAuthTab("register"); setAuthOpen(true); };
   const closeAuth = () => setAuthOpen(false);
 
-
   useEffect(() => {
     let alive = true;
 
     fetchCars()
       .then((data) => {
         if (!alive) return;
-        // если API вернул не массив — подстрахуемся
+        // Ja API atgrieza nevis masīvu — drošības pēc pielāgojam
         setCars(Array.isArray(data) ? data : []);
       })
       .catch((e) => {
         if (!alive) return;
-        setError(e?.message || "Ошибка загрузки каталога");
+        setError(e?.message || "Kataloga ielādes kļūda");
       })
       .finally(() => {
         if (!alive) return;
@@ -52,26 +50,26 @@ export default function Home() {
         <section className="section" id="catalog">
           <div className="container">
             <div className="section__head">
-              <h2>Каталог авто</h2>
+              <h2>Auto katalogs</h2>
               <p className="muted">
-                Данные загружаются из базы данных (Laravel API).
+                Dati tiek ielādēti no datubāzes (Laravel API).
               </p>
             </div>
 
-            {loading && <p className="muted">Загрузка...</p>}
+            {loading && <p className="muted">Ielādē...</p>}
 
             {error && (
               <div className="alert">
-                <div className="alert__title">Не удалось загрузить каталог</div>
+                <div className="alert__title">Neizdevās ielādēt katalogu</div>
                 <div className="alert__text muted">{error}</div>
                 <div className="alert__hint muted">
-                  Проверь: Laravel запущен, /api/cars работает, CORS настроен.
+                  Pārbaudi: vai Laravel ir palaists, vai darbojas /api/cars, vai CORS ir nokonfigurēts.
                 </div>
               </div>
             )}
 
             {!loading && !error && cars.length === 0 && (
-              <p className="muted">Пока нет автомобилей в каталоге.</p>
+              <p className="muted">Šobrīd katalogā nav automašīnu.</p>
             )}
 
             {!loading && !error && cars.length > 0 && (
@@ -86,23 +84,25 @@ export default function Home() {
 
         <section className="section" id="about">
           <div className="container">
-            <h2>О нас</h2>
+            <h2>Par mums</h2>
             <p className="muted">
-              Здесь позже добавим текст о салоне, гарантиях, проверках и т.д.
+              Šeit vēlāk pievienosim tekstu par autosalonu, garantijām, pārbaudēm u.c.
             </p>
           </div>
         </section>
 
         <section className="section" id="contacts">
           <div className="container">
-            <h2>Контакты</h2>
+            <h2>Kontakti</h2>
             <p className="muted">
-              Телефон / мессенджеры / адрес — добавим позже.
+              Tālrunis / ziņapmaiņas lietotnes / adrese — pievienosim vēlāk.
             </p>
           </div>
         </section>
       </main>
+
       <AuthModal open={authOpen} initialTab={authTab} onClose={closeAuth} />
     </>
   );
 }
+
