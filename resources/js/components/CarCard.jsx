@@ -1,7 +1,6 @@
-const fmt = (n) => new Intl.NumberFormat("ru-RU").format(Number(n ?? 0));
+const fmt = (n) => new Intl.NumberFormat("lv-LV").format(Number(n ?? 0));
 
 export default function CarCard({ car }) {
-  // Поддержка частых вариантов названий полей (если вдруг у тебя не 1:1)
   const brand = car.brand ?? car.make ?? car.car_brand ?? "";
   const model = car.model ?? car.car_model ?? "";
   const year = car.year ?? car.release_year ?? "";
@@ -25,14 +24,15 @@ export default function CarCard({ car }) {
         {fuel && transmission && <span>•</span>}
         {transmission && <span>{transmission}</span>}
         {(fuel || transmission) && <span>•</span>}
-        <span>{fmt(mileage)} км</span>
+        <span>{fmt(mileage)} km</span>
       </div>
 
       {description ? <p className="carCard__desc">{description}</p> : null}
 
       <button className="btn btn--ghost" type="button">
-        Подробнее
+        Sīkāk
       </button>
     </article>
   );
 }
+
