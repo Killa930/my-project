@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { authApi, token } from "../api/auth";
 
-export default function AuthModal({ open, initialTab = "login", onClose }) {
+export default function AuthModal({ open, initialTab="login", onClose, onAuthSuccess }) {
   const [tab, setTab] = useState(initialTab);
 
   const [loginEmail, setLoginEmail] = useState("");
@@ -32,20 +33,20 @@ export default function AuthModal({ open, initialTab = "login", onClose }) {
   const resetError = () => setError("");
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    resetError();
-    setLoading(true);
-
-    try {
-      console.log("LOGIN SUBMIT:", { loginEmail, loginPassword });
-      onClose?.();
-    } catch (err) {
-      setError(err?.message || "Radās kļūda");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  e.preventDefault();
+  setError("");
+  setLoading(true);
+  try {
+    const res = await authApi.login(loginEmail, loginPassword); // {user, token}
+    token.set(res.token);
+    onAuthSuccess?.(res.user); // <-- вот это меняет Header
+    onClose?.();
+  } catch {
+    setError("Nepareizs e-pasts vai parole");
+  } finally {
+    setLoading(false);
+  }
+};
   const handleRegister = async (e) => {
     e.preventDefault();
     resetError();

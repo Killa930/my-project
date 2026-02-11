@@ -1,4 +1,4 @@
-export default function Header({ onOpenLogin, onOpenRegister }) {
+export default function Header({ user, onLogout, onOpenLogin, onOpenRegister }) {
   return (
     <header className="header">
       <div className="container header__inner">
@@ -11,19 +11,39 @@ export default function Header({ onOpenLogin, onOpenRegister }) {
         </nav>
 
         <div className="header__actions">
-          <button
-            className="btn btn--ghost"
-            type="button"
-            onClick={onOpenLogin}
-          >
-            Ieiet
-          </button>
-          <button className="btn" type="button" onClick={onOpenRegister}>
-            Reģistrācija
-          </button>
+          {user ? (
+            <>
+              <div className="muted">Sveiki, {user.name}</div>
+
+              <button
+                className="btn btn--ghost"
+                type="button"
+                onClick={onLogout}
+              >
+                Iziet
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="btn btn--ghost"
+                type="button"
+                onClick={onOpenLogin}
+              >
+                Ieiet
+              </button>
+
+              <button
+                className="btn"
+                type="button"
+                onClick={onOpenRegister}
+              >
+                Reģistrācija
+              </button>
+            </>
+          )}
         </div>
       </div>
     </header>
   );
 }
-

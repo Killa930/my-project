@@ -13,6 +13,23 @@ class CarController extends Controller
             Car::query()->orderByDesc('id')->get()
         );
     }
+
+    public function store(Request $request)
+{
+    $data = $request->validate([
+        'brand' => ['required','string'],
+        'model' => ['required','string'],
+        'year' => ['required','integer'],
+        'price' => ['required','numeric'],
+        'mileage' => ['nullable','integer'],
+        'description' => ['nullable','string'],
+    ]);
+
+    $car = \App\Models\Car::create($data);
+
+    return response()->json($car, 201);
+}
+
 }
 
 
