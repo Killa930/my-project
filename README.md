@@ -1,59 +1,159 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚗 Lietotu automašīnu salons (SPA)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Mācību fullstack projekts lietotu automašīnu salonam.  
+Projekts ir izstrādāts kā **SPA (Single Page Application)**, izmantojot **React** un **Laravel**.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🛠️ Tehnoloģijas
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Frontend
+- React.js
+- Vite
+- JavaScript (ES6)
+- CSS
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Backend
+- Laravel
+- REST API
+- MySQL (Laragon)
+- Eloquent ORM
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 📦 Projekta arhitektūra
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Projekts ir veidots kā SPA:
 
-## Laravel Sponsors
+- Laravel piegādā **vienu HTML lapu**
+- React pārvalda visu lietotāja interfeisu
+- Automašīnu dati tiek ielādēti caur API
+- Navigācija un modālie logi darbojas bez lapas pārlādes
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Browser
+↓
+Laravel (HTML + API)
+↓
+React (UI)
 
-### Premium Partners
+yaml
+Copy code
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## 📁 Projekta struktūra
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+resources/
+└── js/
+├── api/
+│ └── cars.js
+├── components/
+│ ├── Header.jsx
+│ ├── Hero.jsx
+│ ├── CarCard.jsx
+│ └── AuthModal.jsx
+├── pages/
+│ └── Home.jsx
+└── app.jsx
 
-## Code of Conduct
+markdown
+Copy code
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## 🖥️ Funkcionalitāte
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### ✅ Galvenā lapa
+- Galvene ar navigāciju
+- Hero sadaļa ar sveicienu
+- Mini automašīnu katalogs
 
-## License
+### ✅ Automašīnu katalogs
+- Dati tiek ielādēti no datubāzes
+- Izmanto API `/api/cars`
+- Attēlotā informācija:
+  - marka
+  - modelis
+  - izlaiduma gads
+  - cena
+  - nobraukums
+  - apraksts
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### ✅ Autorizācijas modālais logs (UI)
+- Pogas **Ienākt / Reģistrēties**
+- Modālais logs bez lapas pārlādes
+- Cilņu pārslēgšana
+- Aizvēršana ar:
+  - klikšķi ārpus loga
+  - pogu ✕
+  - taustiņu Esc
+
+⚠️ Šajā posmā autorizācijas un reģistrācijas dati **netiek nosūtīti uz serveri**  
+(modālais logs ir tikai lietotāja interfeiss)
+
+---
+
+## 🔌 API
+
+### Automašīnu saraksta iegūšana
+GET /api/cars
+
+css
+Copy code
+
+Atbilde:
+```json
+[
+  {
+    "id": 1,
+    "brand": "Toyota",
+    "model": "Corolla",
+    "year": 2017,
+    "price": 10900,
+    "mileage": 120000,
+    "description": "Uzticams automobilis"
+  }
+]
+🚀 Projekta palaišana
+Backend
+bash
+Copy code
+php artisan serve
+Frontend
+bash
+Copy code
+npm run dev
+Atvērt pārlūkā:
+
+cpp
+Copy code
+http://127.0.0.1:8000
+📌 Pašreizējais stāvoklis
+✔️ React + Laravel savienojums darbojas
+✔️ Automašīnu katalogs no datubāzes
+✔️ SPA arhitektūra
+✔️ Autorizācijas modālais logs (UI)
+
+❌ Autentifikācija vēl nav pieslēgta datubāzei
+
+🔮 Nākotnes uzlabojumi
+Reāla lietotāju autorizācija un reģistrācija
+
+Lietotāja sesijas saglabāšana
+
+Automašīnas detalizētā lapa
+
+Meklēšana un filtrēšana
+
+Administratora panelis
+
+👨‍💻 Autors
+Mācību projekts
+React + Laravel
+
+yaml
+Copy code
+
+---
+
+Ja vēlāk vajadzēs **otru README versiju** (ar īstu autorizāciju vai skolas prasībām) — vienkārši pasaki.urce.org/licenses/MIT).
