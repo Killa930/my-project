@@ -1,9 +1,14 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import Home from "./pages/Home";
-import "../css/app.css";
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
+import '../css/app.css'
 
-ReactDOM.createRoot(document.getElementById("app")).render(<Home />);
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>
+)
 
 
 
