@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-// Все маршруты отдаём React
 Route::get('/{any}', function () {
-    return view('welcome');
+    return view('app');
 })->where('any', '.*');
