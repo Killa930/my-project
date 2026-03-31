@@ -123,11 +123,11 @@ class CarController extends Controller
         }
 
         // Фильтр по статусу (по умолчанию показываем только активные)
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        } else {
-            $query->where('status', 'active');
-        }
+       if ($request->filled('status') && $request->status !== 'all') {
+    $query->where('status', $request->status);
+} elseif (!$request->filled('status')) {
+    $query->where('status', 'active');
+}
 
         // === СОРТИРОВКА ===
         // GET /api/cars?sort=price&order=asc
