@@ -1,49 +1,56 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    './resources/**/*.{js,jsx,ts,tsx,blade.php}',
-  ],
-  theme: {
-    extend: {
-      colors: {
-        // Основной акцентный цвет (кнопки, цены, ссылки)
-        accent: {
-          DEFAULT: '#f59e0b', // amber-500
-          hover:   '#d97706', // amber-600
-          light:   '#fef3c7', // amber-100
-          dark:    '#92400e', // amber-800
+    content: ["./resources/**/*.{js,jsx,ts,tsx,blade.php}"],
+    theme: {
+        extend: {
+            colors: {
+                accent: {
+                    DEFAULT: "#f59e0b",
+                    hover: "#d97706",
+                    light: "#fef3c7",
+                    dark: "#92400e",
+                    subtle: "rgba(245, 158, 11, 0.1)",
+                },
+                surface: {
+                    primary: "rgb(var(--surface-primary) / <alpha-value>)",
+                    secondary: "rgb(var(--surface-secondary) / <alpha-value>)",
+                    tertiary: "rgb(var(--surface-tertiary) / <alpha-value>)",
+                },
+                border: {
+                    DEFAULT: "rgb(var(--border-default) / <alpha-value>)",
+                    hover: "rgb(var(--border-hover) / <alpha-value>)",
+                },
+                content: {
+                    primary: "rgb(var(--content-primary) / <alpha-value>)",
+                    secondary: "rgb(var(--content-secondary) / <alpha-value>)",
+                    muted: "rgb(var(--content-muted) / <alpha-value>)",
+                    inverted: "rgb(var(--content-inverted) / <alpha-value>)",
+                },
+                status: {
+                    success: "#10b981",
+                    successBg: "var(--status-success-bg)",
+                    danger: "#ef4444",
+                    dangerBg: "var(--status-danger-bg)",
+                    warning: "#f59e0b",
+                    warningBg: "var(--status-warning-bg)",
+                },
+            },
+            fontFamily: {
+                sans: ["Outfit", "sans-serif"],
+                display: ["Bebas Neue", "sans-serif"],
+            },
+            animation: {
+                "fade-in": "fadeIn 0.4s ease-out",
+                "slide-up": "slideUp 0.5s ease-out",
+            },
+            keyframes: {
+                fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
+                slideUp: {
+                    "0%": { opacity: "0", transform: "translateY(20px)" },
+                    "100%": { opacity: "1", transform: "translateY(0)" },
+                },
+            },
         },
-        // Фон страниц и карточек
-        surface: {
-          primary:   '#030712', // gray-950 — фон страницы
-          secondary: '#111827', // gray-900 — карточки, панели
-          tertiary:  '#1f2937', // gray-800 — поля ввода, бейджи
-        },
-        // Границы
-        border: {
-          DEFAULT: '#1f2937', // gray-800
-          hover:   '#374151', // gray-700
-        },
-        // Текст
-        content: {
-          primary:   '#f3f4f6', // gray-100 — основной текст
-          secondary: '#9ca3af', // gray-400 — подписи
-          muted:     '#6b7280', // gray-500 — неактивный
-        },
-      },
-      fontFamily: {
-        sans: ['Outfit', 'sans-serif'],
-        display: ['Bebas Neue', 'sans-serif'],
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.4s ease-out',
-        'slide-up': 'slideUp 0.5s ease-out',
-      },
-      keyframes: {
-        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
-        slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
-      }
     },
-  },
-  plugins: [],
-}
+    plugins: [],
+};
