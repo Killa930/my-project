@@ -6,25 +6,30 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: {
-          50:  '#fff7ed',
-          100: '#ffedd5',
-          400: '#fb923c',
-          500: '#f97316',
-          600: '#ea580c',
-          700: '#c2410c',
-          800: '#9a3412',
-          900: '#7c2d12',
+        // Основной акцентный цвет (кнопки, цены, ссылки)
+        accent: {
+          DEFAULT: '#f59e0b', // amber-500
+          hover:   '#d97706', // amber-600
+          light:   '#fef3c7', // amber-100
+          dark:    '#92400e', // amber-800
         },
-        dark: {
-          900: '#0a0a0a',
-          800: '#111111',
-          700: '#1a1a1a',
-          600: '#222222',
-          500: '#2a2a2a',
-          400: '#333333',
-          300: '#444444',
-        }
+        // Фон страниц и карточек
+        surface: {
+          primary:   '#030712', // gray-950 — фон страницы
+          secondary: '#111827', // gray-900 — карточки, панели
+          tertiary:  '#1f2937', // gray-800 — поля ввода, бейджи
+        },
+        // Границы
+        border: {
+          DEFAULT: '#1f2937', // gray-800
+          hover:   '#374151', // gray-700
+        },
+        // Текст
+        content: {
+          primary:   '#f3f4f6', // gray-100 — основной текст
+          secondary: '#9ca3af', // gray-400 — подписи
+          muted:     '#6b7280', // gray-500 — неактивный
+        },
       },
       fontFamily: {
         sans: ['Outfit', 'sans-serif'],
