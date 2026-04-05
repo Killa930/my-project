@@ -18,17 +18,17 @@
 
 /* === СВЕТЛАЯ ТЕМА (по умолчанию) === */
 :root {
-  --surface-primary:   #ffffff;
-  --surface-secondary: #f9fafb;
-  --surface-tertiary:  #f3f4f6;
+  --surface-primary:   255 255 255;
+  --surface-secondary: 249 250 251;
+  --surface-tertiary:  243 244 246;
 
-  --border-default:    #e5e7eb;
-  --border-hover:      #d1d5db;
+  --border-default:    229 231 235;
+  --border-hover:      209 213 219;
 
-  --content-primary:   #111827;
-  --content-secondary: #4b5563;
-  --content-muted:     #9ca3af;
-  --content-inverted:  #ffffff;
+  --content-primary:   17 24 39;
+  --content-secondary: 75 85 99;
+  --content-muted:     156 163 175;
+  --content-inverted:  255 255 255;
 
   --status-success-bg: rgba(16, 185, 129, 0.1);
   --status-danger-bg:  rgba(239, 68, 68, 0.1);
@@ -37,17 +37,17 @@
 
 /* === ТЁМНАЯ ТЕМА === */
 .dark {
-  --surface-primary:   #030712;
-  --surface-secondary: #111827;
-  --surface-tertiary:  #1f2937;
+  --surface-primary:   3 7 18;
+  --surface-secondary: 17 24 39;
+  --surface-tertiary:  31 41 55;
 
-  --border-default:    #1f2937;
-  --border-hover:      #374151;
+  --border-default:    31 41 55;
+  --border-hover:      55 65 81;
 
-  --content-primary:   #f3f4f6;
-  --content-secondary: #9ca3af;
-  --content-muted:     #6b7280;
-  --content-inverted:  #111827;
+  --content-primary:   243 244 246;
+  --content-secondary: 156 163 175;
+  --content-muted:     107 114 128;
+  --content-inverted:  17 24 39;
 
   --status-success-bg: rgba(16, 185, 129, 0.1);
   --status-danger-bg:  rgba(239, 68, 68, 0.1);
