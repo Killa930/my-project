@@ -1,0 +1,296 @@
+/*
+ * TransactionsPage — страница darījumi (сделок)
+ *
+ * Показывает все darījumi пользователя:
+ * - Как покупатель: заявки которые я отправил
+ * - Как продавец: заявки которые я получил (могу подтвердить/отклонить)
+ * 
+ * После завершённого darījums покупатель может оставить отзыв.
+ */
+
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import api from "../api/axios";
+import { useAuth } from "../context/AuthContext";
+import {
+    CheckCircleIcon,
+    XCircleIcon,
+    ClockIcon,
+    StarIcon,
+} from "@heroicons/react/24/outline";
+import { StarIcon as StarSolidIcon } from "@heroicons/react/24/solid";
+
+const statusLabels = {
+    pending: "Gaida apstiprinājumu",
+    completed: "Pabeigts",
+    failed: "Noraidīts",
+};
+const statusIcons = {
+    pending: <ClockIcon className="w-4 h-4 text-status-warning" />,
+    completed: <CheckCircleIcon className="w-4 h-4 text-status-success" />,
+    failed: <XCircleIcon className="w-4 h-4 text-status-danger" />,
+};
+const statusColors = {
+    pending: "bg-status-warningBg text-status-warning border-status-warning/20",
+    completed: "bg-status-successBg text-status-success border-status-success/20",
+    failed: "bg-status-dangerBg text-status-danger border-status-danger/20",
+};
+
+function ReviewForm({ transactionId, onSubmitted }) {
+    const [rating, setRating] = useState(0);
+    const [hoverRating, setHoverRating] = useState(0);
+    const [comment, setComment] = useState("");
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async () => {
+        if (rating === 0) return;
+        setLoading(true);
+        try {
+            await api.post("/reviews", {
+                transaction_id: transactionId,
+                rating,
+                comment: comment || null,
+            });
+            onSubmitted();
+        } catch (err) {
+            alert(err.response?.data?.message || "Kļūda");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="mt-3 bg-surface-tertiary rounded-lg p-4">
+            <p className="text-content-primary text-sm font-medium mb-2">
+                Uzrakstīt atsauksmi
+            </p>
+            {/* Звёзды */}
+            <div className="flex gap-1 mb-3">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                        key={star}
+                        onClick={() => setRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="transition-colors"
+                    >
+                        {star <= (hoverRating || rating) ? (
+                            <StarSolidIcon className="w-6 h-6 text-accent" />
+                        ) : (
+                            <StarIcon className="w-6 h-6 text-content-muted" />
+                        )}
+                    </button>
+                ))}
+            </div>
+            <textarea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                placeholder="Jūsu komentārs (neobligāts)..."
+                className="w-full bg-surface-secondary border border-border text-content-primary rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-accent mb-3"
+                rows="2"
+            />
+            <button
+                onClick={handleSubmit}
+                disabled={rating === 0 || loading}
+                className="bg-accent hover:bg-accent-hover disabled:opacity-50 text-content-inverted px-4 py-2 rounded-lg text-sm font-semibold transition-colors"
+            >
+                {loading ? "Nosūta..." : "Nosūtīt atsauksmi"}
+            </button>
+        </div>
+    );
+}
+
+function ExistingReview({ review }) {
+    return (
+        <div className="mt-3 bg-surface-tertiary rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-1">
+                <div className="flex">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <StarSolidIcon
+                            key={star}
+                            className={`w-4 h-4 ${star <= review.rating ? "text-accent" : "text-content-muted"}`}
+                        />
+                    ))}
+                </div>
+                <span className="text-content-muted text-xs">
+                    {review.user?.name}
+                </span>
+            </div>
+            {review.comment && (
+                <p className="text-content-secondary text-sm">
+                    {review.comment}
+                </p>
+            )}
+        </div>
+    );
+}
+
+export default function TransactionsPage() {
+    const { user } = useAuth();
+    const [transactions, setTransactions] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState("all");
+
+    useEffect(() => {
+        loadTransactions();
+    }, []);
+
+    const loadTransactions = async () => {
+        setLoading(true);
+        try {
+            const res = await api.get("/transactions");
+            setTransactions(res.data);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleStatusChange = async (id, status) => {
+        try {
+            await api.put(`/transactions/${id}`, { status });
+            loadTransactions();
+        } catch (err) {
+            alert(err.response?.data?.message || "Kļūda");
+        }
+    };
+
+    const filtered =
+        activeTab === "all"
+            ? transactions
+            : transactions.filter((t) => t.role === activeTab);
+
+    return (
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+            <h1 className="text-2xl font-bold text-content-primary mb-6">
+                Darījumi
+            </h1>
+
+            {/* Табы */}
+            <div className="flex bg-surface-tertiary rounded-lg p-1 mb-6 w-fit">
+                {[
+                    { key: "all", label: "Visi" },
+                    { key: "buyer", label: "Es pērku" },
+                    { key: "seller", label: "Man pērk" },
+                ].map((tab) => (
+                    <button
+                        key={tab.key}
+                        onClick={() => setActiveTab(tab.key)}
+                        className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                            activeTab === tab.key
+                                ? "bg-accent text-content-inverted"
+                                : "text-content-secondary hover:text-content-primary"
+                        }`}
+                    >
+                        {tab.label}
+                    </button>
+                ))}
+            </div>
+
+            {loading ? (
+                <div className="flex justify-center py-12">
+                    <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            ) : filtered.length === 0 ? (
+                <div className="text-center py-16 bg-surface-secondary border border-border rounded-xl">
+                    <p className="text-content-muted text-lg">
+                        Nav darījumu
+                    </p>
+                </div>
+            ) : (
+                <div className="space-y-4">
+                    {filtered.map((t) => (
+                        <div
+                            key={t.id}
+                            className="bg-surface-secondary border border-border rounded-xl p-5"
+                        >
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <div>
+                                    <Link
+                                        to={`/cars/${t.car?.id || t.ad_id}`}
+                                        className="text-content-primary font-semibold hover:text-accent transition-colors"
+                                    >
+                                        {t.car?.car_model?.manufacturer?.name}{" "}
+                                        {t.car?.car_model?.name}
+                                    </Link>
+                                    <p className="text-accent font-bold mt-1">
+                                        {Number(t.amount).toLocaleString(
+                                            "lv-LV"
+                                        )}{" "}
+                                        €
+                                    </p>
+                                    <div className="flex items-center gap-3 mt-2 text-sm">
+                                        <span
+                                            className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded border ${statusColors[t.status]}`}
+                                        >
+                                            {statusIcons[t.status]}
+                                            {statusLabels[t.status]}
+                                        </span>
+                                        <span className="text-content-muted">
+                                            {t.role === "buyer"
+                                                ? `Pārdevējs: ${t.car?.user?.name || "—"}`
+                                                : `Pircējs: ${t.buyer?.name || "—"}`}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Кнопки для продавца — подтвердить / отклонить */}
+                                {t.role === "seller" &&
+                                    t.status === "pending" && (
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={() =>
+                                                    handleStatusChange(
+                                                        t.id,
+                                                        "completed"
+                                                    )
+                                                }
+                                                className="flex items-center gap-1 bg-status-success text-white px-3 py-2 rounded-lg text-sm font-medium"
+                                            >
+                                                <CheckCircleIcon className="w-4 h-4" />
+                                                Apstiprināt
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    handleStatusChange(
+                                                        t.id,
+                                                        "failed"
+                                                    )
+                                                }
+                                                className="flex items-center gap-1 bg-status-danger text-white px-3 py-2 rounded-lg text-sm font-medium"
+                                            >
+                                                <XCircleIcon className="w-4 h-4" />
+                                                Noraidīt
+                                            </button>
+                                        </div>
+                                    )}
+                            </div>
+
+                            {/* Отзыв — показать или форма */}
+                            {t.status === "completed" && t.role === "buyer" && (
+                                <>
+                                    {t.review ? (
+                                        <ExistingReview review={t.review} />
+                                    ) : (
+                                        <ReviewForm
+                                            transactionId={t.id}
+                                            onSubmitted={loadTransactions}
+                                        />
+                                    )}
+                                </>
+                            )}
+
+                            {/* Показать отзыв продавцу */}
+                            {t.status === "completed" &&
+                                t.role === "seller" &&
+                                t.review && (
+                                    <ExistingReview review={t.review} />
+                                )}
+                        </div>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+}
