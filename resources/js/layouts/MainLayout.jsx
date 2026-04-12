@@ -44,6 +44,15 @@ export default function MainLayout() {
                             <Link to="/catalog" className="text-content-secondary hover:text-accent transition-colors font-medium">
                                 Katalogs
                             </Link>
+                            <Link to="/sell" className="text-content-secondary hover:text-accent transition-colors font-medium">
+                                Pārdot auto
+                            </Link>
+                            <Link to="/about" className="text-content-secondary hover:text-accent transition-colors font-medium">
+                                Par mums
+                            </Link>
+                            <Link to="/contact" className="text-content-secondary hover:text-accent transition-colors font-medium">
+                                Kontakti
+                            </Link>
 
                             {/* Кнопка смены темы */}
                             <button
@@ -60,9 +69,6 @@ export default function MainLayout() {
 
                             {user ? (
                                 <>
-                                    <Link to="/cars/create" className="text-content-secondary hover:text-accent transition-colors font-medium">
-                                        Pievienot auto
-                                    </Link>
                                     <Link to="/favorites" className="text-content-secondary hover:text-accent transition-colors">
                                         <HeartIcon className="w-5 h-5" />
                                     </Link>
@@ -75,6 +81,12 @@ export default function MainLayout() {
                                         <div className="absolute right-0 top-full mt-2 w-48 bg-surface-secondary rounded-lg shadow-xl border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                                             <Link to="/dashboard" className="block px-4 py-2.5 text-sm text-content-secondary hover:bg-surface-tertiary hover:text-content-primary rounded-t-lg">
                                                 Mans profils
+                                            </Link>
+                                            <Link to="/transactions" className="block px-4 py-2.5 text-sm text-content-secondary hover:bg-surface-tertiary hover:text-content-primary">
+                                                Darījumi
+                                            </Link>
+                                            <Link to="/cars/create" className="block px-4 py-2.5 text-sm text-content-secondary hover:bg-surface-tertiary hover:text-content-primary">
+                                                Pievienot sludinājumu
                                             </Link>
                                             {user.role === "admin" && (
                                                 <Link to="/admin" className="block px-4 py-2.5 text-sm text-content-secondary hover:bg-surface-tertiary hover:text-content-primary">
@@ -113,10 +125,14 @@ export default function MainLayout() {
                     {mobileMenuOpen && (
                         <div className="md:hidden py-4 border-t border-border space-y-2">
                             <Link to="/catalog" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Katalogs</Link>
+                            <Link to="/sell" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Pārdot auto</Link>
+                            <Link to="/about" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Par mums</Link>
+                            <Link to="/contact" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Kontakti</Link>
                             {user ? (
                                 <>
-                                    <Link to="/cars/create" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Pievienot auto</Link>
                                     <Link to="/dashboard" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Mans profils</Link>
+                                    <Link to="/transactions" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Darījumi</Link>
+                                    <Link to="/cars/create" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Pievienot sludinājumu</Link>
                                     <Link to="/favorites" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Izlase</Link>
                                     {user.role === "admin" && (
                                         <Link to="/admin" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Administrācija</Link>
@@ -157,7 +173,9 @@ export default function MainLayout() {
                             <h3 className="text-content-primary font-semibold mb-3">Navigācija</h3>
                             <div className="space-y-2">
                                 <Link to="/catalog" className="block text-content-muted hover:text-content-secondary text-sm">Katalogs</Link>
-                                <Link to="/register" className="block text-content-muted hover:text-content-secondary text-sm">Reģistrēties</Link>
+                                <Link to="/sell" className="block text-content-muted hover:text-content-secondary text-sm">Pārdot auto</Link>
+                                <Link to="/about" className="block text-content-muted hover:text-content-secondary text-sm">Par mums</Link>
+                                <Link to="/contact" className="block text-content-muted hover:text-content-secondary text-sm">Kontakti</Link>
                             </div>
                         </div>
                         <div>
