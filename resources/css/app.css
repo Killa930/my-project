@@ -1,22 +1,11 @@
-/*
- * app.css — глобальные стили + CSS-переменные для тем
- *
- * Tailwind подключается через @tailwind директивы.
- * CSS-переменные (--surface-primary и т.д.) меняются
- * в зависимости от класса "dark" на <html>.
- *
- * Светлая тема — :root (по умолчанию)
- * Тёмная тема — .dark (когда на <html> есть class="dark")
- */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Подключение шрифтов */
+
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Bebas+Neue&display=swap');
 
-/* === СВЕТЛАЯ ТЕМА (по умолчанию) === */
+
 :root {
   --surface-primary:   255 255 255;
   --surface-secondary: 249 250 251;
@@ -35,26 +24,26 @@
   --status-warning-bg: rgba(245, 158, 11, 0.1);
 }
 
-/* === ТЁМНАЯ ТЕМА === */
-.dark {
-  --surface-primary:   3 7 18;
-  --surface-secondary: 17 24 39;
-  --surface-tertiary:  31 41 55;
 
-  --border-default:    31 41 55;
-  --border-hover:      55 65 81;
+.dark {
+  --surface-primary:   0 0 0;
+  --surface-secondary: 15 15 15;
+  --surface-tertiary:  30 30 30;
+
+  --border-default:    40 40 40;
+  --border-hover:      60 60 60;
 
   --content-primary:   243 244 246;
   --content-secondary: 156 163 175;
   --content-muted:     107 114 128;
-  --content-inverted:  17 24 39;
+  --content-inverted:  0 0 0;
 
   --status-success-bg: rgba(16, 185, 129, 0.1);
   --status-danger-bg:  rgba(239, 68, 68, 0.1);
   --status-warning-bg: rgba(245, 158, 11, 0.1);
 }
 
-/* Плавный переход при смене темы */
+
 * {
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }

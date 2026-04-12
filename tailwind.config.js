@@ -5,11 +5,11 @@ export default {
         extend: {
             colors: {
                 accent: {
-                    DEFAULT: "#f59e0b",
-                    hover: "#d97706",
-                    light: "#fef3c7",
-                    dark: "#92400e",
-                    subtle: "rgba(245, 158, 11, 0.1)",
+                    DEFAULT: "#ef4444",
+                    hover: "#dc2626",
+                    light: "#fef2f2",
+                    dark: "#991b1b",
+                    subtle: "rgba(239, 68, 68, 0.1)",
                 },
                 surface: {
                     primary: "rgb(var(--surface-primary) / <alpha-value>)",
