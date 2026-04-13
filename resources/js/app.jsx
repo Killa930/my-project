@@ -20,6 +20,7 @@ import TransactionsPage from "./pages/TransactionsPage";
 import SellPage from "./pages/SellPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import SellerProfilePage from "./pages/SellerProfilePage";
 
 function App() {
     return (
@@ -34,6 +35,7 @@ function App() {
                             <Route path="/sell" element={<SellPage />} />
                             <Route path="/about" element={<AboutPage />} />
                             <Route path="/contact" element={<ContactPage />} />
+                            <Route path="/seller/:id" element={<SellerProfilePage />} />
                             <Route
                                 path="/cars/:id"
                                 element={<CarDetailPage />}

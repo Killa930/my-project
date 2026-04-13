@@ -9,6 +9,7 @@ import {
     HeartIcon,
     SunIcon,
     MoonIcon,
+    ArrowRightStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 
 export default function MainLayout() {
@@ -24,7 +25,6 @@ export default function MainLayout() {
 
     return (
         <div className="min-h-screen flex flex-col bg-surface-primary text-content-primary">
-            {/* === HEADER === */}
             <header className="bg-surface-secondary border-b border-border sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center justify-between h-16">
@@ -39,32 +39,16 @@ export default function MainLayout() {
                             </span>
                         </Link>
 
-                        {/* Навигация — десктоп */}
+                        {/* Десктоп навигация */}
                         <nav className="hidden md:flex items-center gap-6">
-                            <Link to="/catalog" className="text-content-secondary hover:text-accent transition-colors font-medium">
-                                Katalogs
-                            </Link>
-                            <Link to="/sell" className="text-content-secondary hover:text-accent transition-colors font-medium">
-                                Pārdot auto
-                            </Link>
-                            <Link to="/about" className="text-content-secondary hover:text-accent transition-colors font-medium">
-                                Par mums
-                            </Link>
-                            <Link to="/contact" className="text-content-secondary hover:text-accent transition-colors font-medium">
-                                Kontakti
-                            </Link>
+                            <Link to="/catalog" className="text-content-secondary hover:text-accent transition-colors font-medium">Katalogs</Link>
+                            <Link to="/sell" className="text-content-secondary hover:text-accent transition-colors font-medium">Pārdot auto</Link>
+                            <Link to="/about" className="text-content-secondary hover:text-accent transition-colors font-medium">Par mums</Link>
+                            <Link to="/contact" className="text-content-secondary hover:text-accent transition-colors font-medium">Kontakti</Link>
 
-                            {/* Кнопка смены темы */}
-                            <button
-                                onClick={toggleTheme}
-                                className="text-content-secondary hover:text-accent transition-colors p-2 rounded-lg hover:bg-surface-tertiary"
-                                title={theme === "dark" ? "Gaišais režīms" : "Tumšais režīms"}
-                            >
-                                {theme === "dark" ? (
-                                    <SunIcon className="w-5 h-5" />
-                                ) : (
-                                    <MoonIcon className="w-5 h-5" />
-                                )}
+                            <button onClick={toggleTheme} className="text-content-secondary hover:text-accent transition-colors p-2 rounded-lg hover:bg-surface-tertiary"
+                                title={theme === "dark" ? "Gaišais režīms" : "Tumšais režīms"}>
+                                {theme === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
                             </button>
 
                             {user ? (
@@ -73,6 +57,7 @@ export default function MainLayout() {
                                         <HeartIcon className="w-5 h-5" />
                                     </Link>
 
+                                    {/* Dropdown пользователя */}
                                     <div className="relative group">
                                         <button className="flex items-center gap-2 text-content-secondary hover:text-accent transition-colors">
                                             <UserCircleIcon className="w-5 h-5" />
@@ -93,25 +78,28 @@ export default function MainLayout() {
                                                     Administrācija
                                                 </Link>
                                             )}
-                                            <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-status-danger hover:bg-surface-tertiary rounded-b-lg">
+                                            <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-status-danger hover:bg-surface-tertiary rounded-b-lg flex items-center gap-2">
+                                                <ArrowRightStartOnRectangleIcon className="w-4 h-4" />
                                                 Iziet
                                             </button>
                                         </div>
                                     </div>
+
+                                    {/* Иконка выхода — отдельная кнопка в хедере */}
+                                    <button onClick={handleLogout} className="text-content-secondary hover:text-status-danger transition-colors p-2 rounded-lg hover:bg-surface-tertiary"
+                                        title="Iziet">
+                                        <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
+                                    </button>
                                 </>
                             ) : (
                                 <div className="flex items-center gap-3">
-                                    <Link to="/login" className="text-content-secondary hover:text-content-primary transition-colors font-medium">
-                                        Pieslēgties
-                                    </Link>
-                                    <Link to="/register" className="bg-accent hover:bg-accent-hover text-content-inverted px-4 py-2 rounded-lg font-semibold transition-colors">
-                                        Reģistrēties
-                                    </Link>
+                                    <Link to="/login" className="text-content-secondary hover:text-content-primary transition-colors font-medium">Pieslēgties</Link>
+                                    <Link to="/register" className="bg-accent hover:bg-accent-hover text-content-inverted px-4 py-2 rounded-lg font-semibold transition-colors">Reģistrēties</Link>
                                 </div>
                             )}
                         </nav>
 
-                        {/* Мобильное меню */}
+                        {/* Мобильное */}
                         <div className="flex items-center gap-3 md:hidden">
                             <button onClick={toggleTheme} className="text-content-secondary p-2">
                                 {theme === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
@@ -137,7 +125,9 @@ export default function MainLayout() {
                                     {user.role === "admin" && (
                                         <Link to="/admin" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Administrācija</Link>
                                     )}
-                                    <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="block py-2 text-status-danger">Iziet</button>
+                                    <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="flex items-center gap-2 py-2 text-status-danger">
+                                        <ArrowRightStartOnRectangleIcon className="w-4 h-4" /> Iziet
+                                    </button>
                                 </>
                             ) : (
                                 <>
@@ -150,22 +140,15 @@ export default function MainLayout() {
                 </div>
             </header>
 
-            <main className="flex-1">
-                <Outlet />
-            </main>
+            <main className="flex-1"><Outlet /></main>
 
             <footer className="bg-surface-secondary border-t border-border py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div>
                             <div className="flex items-center gap-2 mb-3">
-                                <div className="w-7 h-7 bg-accent rounded-md flex items-center justify-center">
-                                    <span className="text-content-inverted font-black text-xs">CB</span>
-                                </div>
-                                <span className="text-lg font-bold">
-                                    <span className="text-accent">Car</span>
-                                    <span className="text-content-primary">Buy</span>
-                                </span>
+                                <div className="w-7 h-7 bg-accent rounded-md flex items-center justify-center"><span className="text-content-inverted font-black text-xs">CB</span></div>
+                                <span className="text-lg font-bold"><span className="text-accent">Car</span><span className="text-content-primary">Buy</span></span>
                             </div>
                             <p className="text-content-muted text-sm">Lietotu automašīnu tirdzniecības platforma.</p>
                         </div>
