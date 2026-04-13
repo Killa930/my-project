@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
+import { useToast } from "../context/ToastContext";
 import { PlusIcon, PencilSquareIcon, TrashIcon, UserIcon } from "@heroicons/react/24/outline";
 
 const statusLabels = { active: "Aktīvs", sold: "Pārdots", inactive: "Neaktīvs" };
@@ -10,6 +11,7 @@ const statusColors = {
     sold: "bg-status-dangerBg text-status-danger border-status-danger/20",
     inactive: "bg-surface-tertiary text-content-muted border-border",
 };
+
 
 function CarListItem({ car, onDelete, onStatusChange, showOwner = false }) {
     return (
@@ -32,16 +34,14 @@ function CarListItem({ car, onDelete, onStatusChange, showOwner = false }) {
             </div>
             <div className="flex sm:flex-col gap-2 shrink-0">
                 <Link to={`/cars/${car.id}/edit`} className="flex items-center gap-1 text-sm text-content-secondary hover:text-accent transition-colors bg-surface-tertiary px-3 py-2 rounded-lg">
-                    <PencilSquareIcon className="w-4 h-4" /> Rediģēt
-                </Link>
+                    <PencilSquareIcon className="w-4 h-4" /> Rediģēt</Link>
                 {car.status === "active" ? (
                     <button onClick={() => onStatusChange(car.id, "sold")} className="text-sm text-content-secondary hover:text-status-success transition-colors bg-surface-tertiary px-3 py-2 rounded-lg">Pārdots</button>
                 ) : (
                     <button onClick={() => onStatusChange(car.id, "active")} className="text-sm text-content-secondary hover:text-status-success transition-colors bg-surface-tertiary px-3 py-2 rounded-lg">Aktivizēt</button>
                 )}
                 <button onClick={() => onDelete(car.id)} className="flex items-center gap-1 text-sm text-content-secondary hover:text-status-danger transition-colors bg-surface-tertiary px-3 py-2 rounded-lg">
-                    <TrashIcon className="w-4 h-4" /> Dzēst
-                </button>
+                    <TrashIcon className="w-4 h-4" /> Dzēst</button>
             </div>
         </div>
     );
@@ -49,6 +49,7 @@ function CarListItem({ car, onDelete, onStatusChange, showOwner = false }) {
 
 export default function DashboardPage() {
     const { user } = useAuth();
+    const toast = useToast();
     const [myCars, setMyCars] = useState([]);
     const [allCars, setAllCars] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -67,15 +68,21 @@ export default function DashboardPage() {
     };
 
     const handleDelete = async (carId) => {
-        if (!confirm("Vai tiešām vēlaties dzēst?")) return;
-        await api.delete(`/cars/${carId}`);
-        setMyCars((p) => p.filter((c) => c.id !== carId));
-        setAllCars((p) => p.filter((c) => c.id !== carId));
+        try {
+            await api.delete(`/cars/${carId}`);
+            setMyCars((p) => p.filter((c) => c.id !== carId));
+            setAllCars((p) => p.filter((c) => c.id !== carId));
+            toast.success("Sludinājums dzēsts");
+        } catch (err) { toast.error("Kļūda dzēšot sludinājumu"); }
     };
+
     const handleStatusChange = async (carId, s) => {
-        await api.put(`/cars/${carId}`, { status: s });
-        const upd = (l) => l.map((c) => (c.id === carId ? { ...c, status: s } : c));
-        setMyCars(upd); setAllCars(upd);
+        try {
+            await api.put(`/cars/${carId}`, { status: s });
+            const upd = (l) => l.map((c) => (c.id === carId ? { ...c, status: s } : c));
+            setMyCars(upd); setAllCars(upd);
+            toast.success(s === "sold" ? "Atzīmēts kā pārdots" : "Sludinājums aktivizēts");
+        } catch (err) { toast.error("Kļūda mainot statusu"); }
     };
 
     const displayCars = activeTab === "all" ? allCars : myCars;
@@ -92,6 +99,9 @@ export default function DashboardPage() {
                         <p className="text-content-muted">{user?.email}</p>
                         {user?.phone && <p className="text-content-muted text-sm">{user.phone}</p>}
                         {user?.role === "admin" && <span className="inline-block mt-1 text-xs bg-accent-subtle text-accent border border-accent/20 px-2 py-0.5 rounded">Administrators</span>}
+                        <Link to="/transactions" className="inline-flex items-center gap-2 mt-3 text-accent hover:text-accent-hover text-sm font-medium transition-colors">
+    Mani darījumi →
+</Link>
                     </div>
                 </div>
             </div>
@@ -106,8 +116,7 @@ export default function DashboardPage() {
                     )}
                 </div>
                 <Link to="/cars/create" className="flex items-center gap-2 bg-accent hover:bg-accent-hover text-content-inverted px-4 py-2.5 rounded-lg font-semibold transition-colors">
-                    <PlusIcon className="w-4 h-4" /> Pievienot
-                </Link>
+                    <PlusIcon className="w-4 h-4" /> Pievienot</Link>
             </div>
             {loading ? (
                 <div className="flex justify-center py-12"><div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin"></div></div>

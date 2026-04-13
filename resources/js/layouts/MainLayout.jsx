@@ -52,51 +52,28 @@ export default function MainLayout() {
                             </button>
 
                             {user ? (
-                                <>
-                                    <Link to="/favorites" className="text-content-secondary hover:text-accent transition-colors">
-                                        <HeartIcon className="w-5 h-5" />
-                                    </Link>
+    <>
+        <Link to="/favorites" className="text-content-secondary hover:text-accent transition-colors">
+            <HeartIcon className="w-5 h-5" />
+        </Link>
 
-                                    {/* Dropdown пользователя */}
-                                    <div className="relative group">
-                                        <button className="flex items-center gap-2 text-content-secondary hover:text-accent transition-colors">
-                                            <UserCircleIcon className="w-5 h-5" />
-                                            <span className="font-medium">{user.name}</span>
-                                        </button>
-                                        <div className="absolute right-0 top-full mt-2 w-48 bg-surface-secondary rounded-lg shadow-xl border border-border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                            <Link to="/dashboard" className="block px-4 py-2.5 text-sm text-content-secondary hover:bg-surface-tertiary hover:text-content-primary rounded-t-lg">
-                                                Mans profils
-                                            </Link>
-                                            <Link to="/transactions" className="block px-4 py-2.5 text-sm text-content-secondary hover:bg-surface-tertiary hover:text-content-primary">
-                                                Darījumi
-                                            </Link>
-                                            <Link to="/cars/create" className="block px-4 py-2.5 text-sm text-content-secondary hover:bg-surface-tertiary hover:text-content-primary">
-                                                Pievienot sludinājumu
-                                            </Link>
-                                            {user.role === "admin" && (
-                                                <Link to="/admin" className="block px-4 py-2.5 text-sm text-content-secondary hover:bg-surface-tertiary hover:text-content-primary">
-                                                    Administrācija
-                                                </Link>
-                                            )}
-                                            <button onClick={handleLogout} className="w-full text-left px-4 py-2.5 text-sm text-status-danger hover:bg-surface-tertiary rounded-b-lg flex items-center gap-2">
-                                                <ArrowRightStartOnRectangleIcon className="w-4 h-4" />
-                                                Iziet
-                                            </button>
-                                        </div>
-                                    </div>
+        {/* Имя — ссылка на профиль */}
+        <Link to="/dashboard" className="flex items-center gap-2 text-content-secondary hover:text-accent transition-colors">
+            <UserCircleIcon className="w-5 h-5" />
+            <span className="font-medium">{user.name}</span>
+        </Link>
 
-                                    {/* Иконка выхода — отдельная кнопка в хедере */}
-                                    <button onClick={handleLogout} className="text-content-secondary hover:text-status-danger transition-colors p-2 rounded-lg hover:bg-surface-tertiary"
-                                        title="Iziet">
-                                        <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
-                                    </button>
-                                </>
-                            ) : (
-                                <div className="flex items-center gap-3">
-                                    <Link to="/login" className="text-content-secondary hover:text-content-primary transition-colors font-medium">Pieslēgties</Link>
-                                    <Link to="/register" className="bg-accent hover:bg-accent-hover text-content-inverted px-4 py-2 rounded-lg font-semibold transition-colors">Reģistrēties</Link>
-                                </div>
-                            )}
+        {/* Кнопка выхода */}
+        <button onClick={handleLogout} className="text-content-secondary hover:text-status-danger transition-colors p-2 rounded-lg hover:bg-surface-tertiary" title="Iziet">
+            <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
+        </button>
+    </>
+) : (
+    <div className="flex items-center gap-3">
+        <Link to="/login" className="text-content-secondary hover:text-content-primary transition-colors font-medium">Pieslēgties</Link>
+        <Link to="/register" className="bg-accent hover:bg-accent-hover text-content-inverted px-4 py-2 rounded-lg font-semibold transition-colors">Reģistrēties</Link>
+    </div>
+)}
                         </nav>
 
                         {/* Мобильное */}
