@@ -1,60 +1,92 @@
 /*
- * context/AuthContext.jsx — глобальное состояние авторизации
+ * AuthContext — авторизация + таймер сессии
  *
- * Проблема: многим компонентам нужно знать, залогинен ли пользователь.
- * Шапка показывает кнопку "Войти" или имя пользователя.
- * Каталог показывает кнопку избранного только залогиненным.
- * Форма создания объявления доступна только авторизованным.
- *
- * Решение: Context — это "общее хранилище", доступное из любого компонента.
- * Вместо того чтобы передавать user через 10 уровней props,
- * любой компонент может вызвать useAuth() и получить данные.
+ * Таймер: если пользователь неактивен 30 минут — автоматический выход.
+ * Каждое действие (клик, скролл, нажатие клавиши) сбрасывает таймер.
+ * За 1 минуту до истечения показывается предупреждение.
  */
 
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
 import api from "../api/axios";
 
-// Создаём контекст (пустой "контейнер")
 const AuthContext = createContext(null);
 
-/*
- * AuthProvider — компонент-обёртка, который предоставляет данные всем дочерним.
- * Оборачивает всё приложение в app.jsx:
- * <AuthProvider> <App /> </AuthProvider>
- */
-export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null); // текущий пользователь (или null)
-    const [loading, setLoading] = useState(true); // загрузка (проверяем токен)
+const SESSION_DURATION = 30 * 60 * 1000;  // 30 минут в миллисекундах
+const WARNING_BEFORE = 60 * 1000;          // предупреждение за 1 минуту
 
-    /*
-     * useEffect — выполняется один раз при загрузке приложения.
-     * Проверяет: есть ли сохранённый токен? Если да — запрашивает у сервера
-     * данные пользователя (GET /api/me). Если токен валидный — сохраняем
-     * пользователя в state. Если нет — очищаем.
-     */
+export function AuthProvider({ children }) {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [sessionWarning, setSessionWarning] = useState(false);
+    const logoutTimerRef = useRef(null);
+    const warningTimerRef = useRef(null);
+
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
             api.get("/me")
-                .then((res) => {
-                    setUser(res.data);
-                })
-                .catch(() => {
-                    localStorage.removeItem("token");
-                    localStorage.removeItem("user");
-                })
+                .then((res) => { setUser(res.data); startSessionTimer(); })
+                .catch(() => { localStorage.removeItem("token"); })
                 .finally(() => setLoading(false));
         } else {
             setLoading(false);
         }
+
+        return () => { clearTimers(); };
     }, []);
 
-    // === ФУНКЦИИ АВТОРИЗАЦИИ ===
+    // Сброс таймера при активности пользователя
+    useEffect(() => {
+        if (!user) return;
+
+        const resetOnActivity = () => {
+            if (sessionWarning) setSessionWarning(false);
+            startSessionTimer();
+        };
+
+        window.addEventListener("click", resetOnActivity);
+        window.addEventListener("keydown", resetOnActivity);
+        window.addEventListener("scroll", resetOnActivity);
+
+        return () => {
+            window.removeEventListener("click", resetOnActivity);
+            window.removeEventListener("keydown", resetOnActivity);
+            window.removeEventListener("scroll", resetOnActivity);
+        };
+    }, [user, sessionWarning]);
+
+    const clearTimers = () => {
+        if (logoutTimerRef.current) clearTimeout(logoutTimerRef.current);
+        if (warningTimerRef.current) clearTimeout(warningTimerRef.current);
+    };
+
+    const startSessionTimer = useCallback(() => {
+        clearTimers();
+
+        // Предупреждение за 1 минуту до конца
+        warningTimerRef.current = setTimeout(() => {
+            setSessionWarning(true);
+        }, SESSION_DURATION - WARNING_BEFORE);
+
+        // Автоматический выход
+        logoutTimerRef.current = setTimeout(() => {
+            performLogout();
+        }, SESSION_DURATION);
+    }, []);
+
+    const performLogout = async () => {
+        clearTimers();
+        try { await api.post("/logout"); } catch {}
+        localStorage.removeItem("token");
+        setUser(null);
+        setSessionWarning(false);
+    };
 
     const login = async (email, password) => {
         const res = await api.post("/login", { email, password });
         localStorage.setItem("token", res.data.token);
         setUser(res.data.user);
+        startSessionTimer();
         return res.data;
     };
 
@@ -62,44 +94,57 @@ export function AuthProvider({ children }) {
         const res = await api.post("/register", data);
         localStorage.setItem("token", res.data.token);
         setUser(res.data.user);
+        startSessionTimer();
         return res.data;
     };
 
     const logout = async () => {
-        try {
-            await api.post("/logout");
-        } catch {
-            // Даже если запрос не прошёл — очищаем локально
-        }
-        localStorage.removeItem("token");
-        setUser(null);
+        await performLogout();
     };
 
-    /*
-     * value — данные, которые будут доступны через useAuth().
-     * Любой компонент сможет вызвать:
-     *   const { user, login, logout } = useAuth();
-     */
+    const extendSession = () => {
+        setSessionWarning(false);
+        startSessionTimer();
+    };
+
     return (
-        <AuthContext.Provider
-            value={{ user, setUser, login, register, logout, loading }}
-        >
+        <AuthContext.Provider value={{ user, setUser, login, register, logout, loading }}>
             {children}
+
+            {/* Предупреждение о скором выходе */}
+            {sessionWarning && (
+                <div className="fixed inset-0 bg-black/60 z-[200] flex items-center justify-center p-4">
+                    <div className="bg-surface-secondary border border-border rounded-2xl p-8 max-w-sm w-full text-center">
+                        <div className="w-16 h-16 bg-status-warningBg rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg className="w-8 h-8 text-status-warning" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <h2 className="text-xl font-bold text-content-primary mb-2">
+                            Sesija beigsies
+                        </h2>
+                        <p className="text-content-secondary text-sm mb-6">
+                            Jūsu sesija drīz beigsies neaktivitātes dēļ. Vai vēlaties turpināt?
+                        </p>
+                        <div className="flex gap-3">
+                            <button onClick={performLogout}
+                                className="flex-1 bg-surface-tertiary hover:bg-border-hover text-content-primary py-2.5 rounded-lg font-medium transition-colors">
+                                Iziet
+                            </button>
+                            <button onClick={extendSession}
+                                className="flex-1 bg-accent hover:bg-accent-hover text-content-inverted py-2.5 rounded-lg font-bold transition-colors">
+                                Turpināt
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AuthContext.Provider>
     );
 }
 
-/*
- * useAuth() — хук для доступа к авторизации из любого компонента.
- *
- * Пример использования:
- *   const { user, logout } = useAuth();
- *   if (user) { показываем имя } else { показываем кнопку "Войти" }
- */
 export function useAuth() {
     const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error("useAuth must be used within AuthProvider");
-    }
+    if (!context) throw new Error("useAuth must be used within AuthProvider");
     return context;
 }
