@@ -1,14 +1,30 @@
 import { Link } from "react-router-dom";
-import { HeartIcon } from "@heroicons/react/24/outline";
-import { HeartIcon as HeartSolidIcon } from "@heroicons/react/24/solid";
+import { HeartIcon, ScaleIcon } from "@heroicons/react/24/outline";
+import { HeartIcon as HeartSolidIcon, ScaleIcon as ScaleSolidIcon } from "@heroicons/react/24/solid";
+import { useCompare } from "../context/CompareContext";
+import { useToast } from "../context/ToastContext";
 
 const fuelLabels = { petrol: "Benzīns", diesel: "Dīzelis", electric: "Elektriskais", hybrid: "Hibrīds", petrol_lpg: "Benz./gāze" };
 const transmissionLabels = { manual: "Manuāla", automatic: "Automāts" };
 
 export default function CarCard({ car, onFavoriteToggle, isFavorite }) {
+    const { toggleCompare, isInCompare, compareIds } = useCompare();
+    const toast = useToast();
     const manufacturer = car.car_model?.manufacturer?.name || "";
     const model = car.car_model?.name || "";
     const imageUrl = car.main_image?.image_path ? `/storage/${car.main_image.image_path}` : "/images/car-placeholder.svg";
+    const inCompare = isInCompare(car.id);
+
+    const handleCompare = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!inCompare && compareIds.length >= 3) {
+            toast.warning("Salīdzinājumā maksimums 3 auto. Vecākais tika aizvietots.");
+        } else {
+            toast.success(inCompare ? "Noņemts no salīdzinājuma" : "Pievienots salīdzinājumam");
+        }
+        toggleCompare(car.id);
+    };
 
     return (
         <div className="bg-surface-secondary rounded-xl border border-border overflow-hidden hover:border-border-hover transition-all duration-300 group">
@@ -21,6 +37,19 @@ export default function CarCard({ car, onFavoriteToggle, isFavorite }) {
                 {car.status === "sold" && (
                     <div className="absolute top-3 left-3 bg-status-danger text-white text-xs font-bold px-2.5 py-1 rounded-md">Pārdots</div>
                 )}
+
+                {/* Кнопка сравнения — в верхнем правом углу фото */}
+                <button
+                    onClick={handleCompare}
+                    className={`absolute top-3 right-3 p-2 rounded-lg transition-colors ${
+                        inCompare
+                            ? "bg-accent text-content-inverted"
+                            : "bg-surface-primary/80 backdrop-blur text-content-secondary hover:text-accent"
+                    }`}
+                    title={inCompare ? "Noņemt no salīdzinājuma" : "Salīdzināt"}
+                >
+                    {inCompare ? <ScaleSolidIcon className="w-4 h-4" /> : <ScaleIcon className="w-4 h-4" />}
+                </button>
             </Link>
             <div className="p-4">
                 <Link to={`/cars/${car.id}`}>

@@ -1,20 +1,17 @@
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import { useCompare } from "../context/CompareContext";
 import { useState } from "react";
 import {
-    Bars3Icon,
-    XMarkIcon,
-    UserCircleIcon,
-    HeartIcon,
-    SunIcon,
-    MoonIcon,
-    ArrowRightStartOnRectangleIcon,
+    Bars3Icon, XMarkIcon, UserCircleIcon, HeartIcon,
+    SunIcon, MoonIcon, ArrowRightStartOnRectangleIcon, ScaleIcon,
 } from "@heroicons/react/24/outline";
 
 export default function MainLayout() {
     const { user, logout } = useAuth();
     const { theme, toggleTheme } = useTheme();
+    const { compareIds } = useCompare();
     const navigate = useNavigate();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -28,7 +25,6 @@ export default function MainLayout() {
             <header className="bg-surface-secondary border-b border-border sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center justify-between h-16">
-                        {/* Логотип */}
                         <Link to="/" className="flex items-center gap-2">
                             <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
                                 <span className="text-content-inverted font-black text-sm">CB</span>
@@ -39,45 +35,56 @@ export default function MainLayout() {
                             </span>
                         </Link>
 
-                        {/* Десктоп навигация */}
                         <nav className="hidden md:flex items-center gap-6">
                             <Link to="/catalog" className="text-content-secondary hover:text-accent transition-colors font-medium">Katalogs</Link>
                             <Link to="/sell" className="text-content-secondary hover:text-accent transition-colors font-medium">Pārdot auto</Link>
                             <Link to="/about" className="text-content-secondary hover:text-accent transition-colors font-medium">Par mums</Link>
                             <Link to="/contact" className="text-content-secondary hover:text-accent transition-colors font-medium">Kontakti</Link>
 
-                            <button onClick={toggleTheme} className="text-content-secondary hover:text-accent transition-colors p-2 rounded-lg hover:bg-surface-tertiary"
-                                title={theme === "dark" ? "Gaišais režīms" : "Tumšais režīms"}>
+                            <button onClick={toggleTheme} className="text-content-secondary hover:text-accent transition-colors p-2 rounded-lg hover:bg-surface-tertiary" title={theme === "dark" ? "Gaišais režīms" : "Tumšais režīms"}>
                                 {theme === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
                             </button>
 
+                            {/* Иконка сравнения с счётчиком */}
+                            <Link to="/compare" className="relative text-content-secondary hover:text-accent transition-colors p-2 rounded-lg hover:bg-surface-tertiary" title="Salīdzinājums">
+                                <ScaleIcon className="w-5 h-5" />
+                                {compareIds.length > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-accent text-content-inverted text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                                        {compareIds.length}
+                                    </span>
+                                )}
+                            </Link>
+
                             {user ? (
-    <>
-        <Link to="/favorites" className="text-content-secondary hover:text-accent transition-colors">
-            <HeartIcon className="w-5 h-5" />
-        </Link>
-
-        {/* Имя — ссылка на профиль */}
-        <Link to="/dashboard" className="flex items-center gap-2 text-content-secondary hover:text-accent transition-colors">
-            <UserCircleIcon className="w-5 h-5" />
-            <span className="font-medium">{user.name}</span>
-        </Link>
-
-        {/* Кнопка выхода */}
-        <button onClick={handleLogout} className="text-content-secondary hover:text-status-danger transition-colors p-2 rounded-lg hover:bg-surface-tertiary" title="Iziet">
-            <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
-        </button>
-    </>
-) : (
-    <div className="flex items-center gap-3">
-        <Link to="/login" className="text-content-secondary hover:text-content-primary transition-colors font-medium">Pieslēgties</Link>
-        <Link to="/register" className="bg-accent hover:bg-accent-hover text-content-inverted px-4 py-2 rounded-lg font-semibold transition-colors">Reģistrēties</Link>
-    </div>
-)}
+                                <>
+                                    <Link to="/favorites" className="text-content-secondary hover:text-accent transition-colors">
+                                        <HeartIcon className="w-5 h-5" />
+                                    </Link>
+                                    <Link to="/dashboard" className="flex items-center gap-2 text-content-secondary hover:text-accent transition-colors">
+                                        <UserCircleIcon className="w-5 h-5" />
+                                        <span className="font-medium">{user.name}</span>
+                                    </Link>
+                                    <button onClick={handleLogout} className="text-content-secondary hover:text-status-danger transition-colors p-2 rounded-lg hover:bg-surface-tertiary" title="Iziet">
+                                        <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
+                                    </button>
+                                </>
+                            ) : (
+                                <div className="flex items-center gap-3">
+                                    <Link to="/login" className="text-content-secondary hover:text-content-primary transition-colors font-medium">Pieslēgties</Link>
+                                    <Link to="/register" className="bg-accent hover:bg-accent-hover text-content-inverted px-4 py-2 rounded-lg font-semibold transition-colors">Reģistrēties</Link>
+                                </div>
+                            )}
                         </nav>
 
-                        {/* Мобильное */}
                         <div className="flex items-center gap-3 md:hidden">
+                            <Link to="/compare" className="relative text-content-secondary p-2">
+                                <ScaleIcon className="w-5 h-5" />
+                                {compareIds.length > 0 && (
+                                    <span className="absolute -top-0 -right-0 bg-accent text-content-inverted text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                                        {compareIds.length}
+                                    </span>
+                                )}
+                            </Link>
                             <button onClick={toggleTheme} className="text-content-secondary p-2">
                                 {theme === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
                             </button>
@@ -91,17 +98,15 @@ export default function MainLayout() {
                         <div className="md:hidden py-4 border-t border-border space-y-2">
                             <Link to="/catalog" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Katalogs</Link>
                             <Link to="/sell" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Pārdot auto</Link>
+                            <Link to="/compare" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Salīdzinājums ({compareIds.length})</Link>
                             <Link to="/about" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Par mums</Link>
                             <Link to="/contact" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Kontakti</Link>
                             {user ? (
                                 <>
                                     <Link to="/dashboard" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Mans profils</Link>
                                     <Link to="/transactions" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Darījumi</Link>
-                                    <Link to="/cars/create" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Pievienot sludinājumu</Link>
                                     <Link to="/favorites" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Izlase</Link>
-                                    {user.role === "admin" && (
-                                        <Link to="/admin" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Administrācija</Link>
-                                    )}
+                                    {user.role === "admin" && <Link to="/admin" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Administrācija</Link>}
                                     <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="flex items-center gap-2 py-2 text-status-danger">
                                         <ArrowRightStartOnRectangleIcon className="w-4 h-4" /> Iziet
                                     </button>
@@ -134,6 +139,7 @@ export default function MainLayout() {
                             <div className="space-y-2">
                                 <Link to="/catalog" className="block text-content-muted hover:text-content-secondary text-sm">Katalogs</Link>
                                 <Link to="/sell" className="block text-content-muted hover:text-content-secondary text-sm">Pārdot auto</Link>
+                                <Link to="/compare" className="block text-content-muted hover:text-content-secondary text-sm">Salīdzinājums</Link>
                                 <Link to="/about" className="block text-content-muted hover:text-content-secondary text-sm">Par mums</Link>
                                 <Link to="/contact" className="block text-content-muted hover:text-content-secondary text-sm">Kontakti</Link>
                             </div>
