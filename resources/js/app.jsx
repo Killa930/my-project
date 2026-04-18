@@ -24,6 +24,7 @@ import SellerProfilePage from "./pages/SellerProfilePage";
 import ComparePage from "./pages/ComparePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
+import UsersManagementPage from "./pages/UsersManagementPage";
 
 function App() {
     return (
@@ -55,6 +56,7 @@ function App() {
 
                                     <Route element={<AdminRoute />}>
                                         <Route path="/admin" element={<AdminPage />} />
+                                        <Route path="/admin/users" element={<UsersManagementPage />} />
                                     </Route>
                                 </Route>
                             </Routes>

@@ -8,8 +8,9 @@ use App\Http\Controllers\Api\ManufacturerController;
 use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\UserController;
 
-// === ПУБЛИЧНЫЕ ===
+// ПУБЛИЧНЫЕ
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/cars', [CarController::class, 'index']);
@@ -18,7 +19,7 @@ Route::get('/manufacturers', [ManufacturerController::class, 'index']);
 Route::get('/manufacturers/{manufacturer}/models', [ManufacturerController::class, 'models']);
 Route::get('/reviews', [ReviewController::class, 'index']);
 
-// === ЗАЩИЩЁННЫЕ ===
+// ЗАЩИЩЁННЫЕ
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
@@ -37,4 +38,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/reviews', [ReviewController::class, 'store']);
     Route::get('/statistics', [StatisticsController::class, 'index']);
+
+    // АДМИН — управление пользователями
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users/{user}/block', [UserController::class, 'block']);
+    Route::post('/users/{user}/unblock', [UserController::class, 'unblock']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
 });

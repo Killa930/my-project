@@ -29,7 +29,6 @@ class AuthController extends Controller
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
-
         return response()->json(['user' => $user, 'token' => $token], 201);
     }
 
@@ -42,8 +41,14 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        $token = $user->createToken('auth_token')->plainTextToken;
 
+        // Проверка блокировки
+        if ($user->is_blocked) {
+            Auth::logout();
+            return response()->json(['message' => 'Jūsu konts ir bloķēts. Sazinieties ar administratoru.'], 403);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json(['user' => $user, 'token' => $token]);
     }
 
@@ -58,41 +63,22 @@ class AuthController extends Controller
         return response()->json($request->user());
     }
 
-    /*
-     * DELETE ACCOUNT — удаление аккаунта
-     *
-     * Удаляет пользователя и все связанные данные.
-     * Требует подтверждение паролем для безопасности.
-     * cascadeOnDelete в миграциях автоматически удалит:
-     * - объявления пользователя
-     * - фото объявлений
-     * - избранное
-     * - darījumi
-     */
     public function deleteAccount(Request $request)
     {
-        $request->validate([
-            'password' => 'required',
-        ]);
-
+        $request->validate(['password' => 'required']);
         $user = $request->user();
 
-        // Проверяем пароль
         if (!Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Nepareiza parole'], 403);
         }
 
-        // Удаляем фото объявлений с диска
         foreach ($user->cars as $car) {
             foreach ($car->images as $image) {
                 Storage::disk('public')->delete($image->image_path);
             }
         }
 
-        // Удаляем все токены
         $user->tokens()->delete();
-
-        // Удаляем пользователя (cascade удалит связанные записи)
         $user->delete();
 
         return response()->json(['message' => 'Konts veiksmīgi dzēsts']);
