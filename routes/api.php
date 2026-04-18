@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\StatisticsController;
 use App\Http\Controllers\Api\TransactionController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\MessageController;
 
 // ПУБЛИЧНЫЕ
 Route::post('/register', [AuthController::class, 'register']);
@@ -39,9 +40,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reviews', [ReviewController::class, 'store']);
     Route::get('/statistics', [StatisticsController::class, 'index']);
 
-    // АДМИН — управление пользователями
     Route::get('/users', [UserController::class, 'index']);
     Route::post('/users/{user}/block', [UserController::class, 'block']);
     Route::post('/users/{user}/unblock', [UserController::class, 'unblock']);
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
+
+    // ЧАТ
+    Route::get('/conversations', [MessageController::class, 'conversations']);
+    Route::get('/messages/{user}', [MessageController::class, 'messages']);
+    Route::post('/messages', [MessageController::class, 'store']);
+    Route::get('/messages-unread-count', [MessageController::class, 'unreadCount']);
 });

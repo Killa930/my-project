@@ -25,6 +25,7 @@ import ComparePage from "./pages/ComparePage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import UsersManagementPage from "./pages/UsersManagementPage";
+import ChatPage from "./pages/ChatPage";
 
 function App() {
     return (
@@ -52,6 +53,7 @@ function App() {
                                         <Route path="/cars/:id/edit" element={<EditCarPage />} />
                                         <Route path="/favorites" element={<FavoritesPage />} />
                                         <Route path="/transactions" element={<TransactionsPage />} />
+                                        <Route path="/chat" element={<ChatPage />} />
                                     </Route>
 
                                     <Route element={<AdminRoute />}>

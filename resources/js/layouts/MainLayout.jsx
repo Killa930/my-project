@@ -2,10 +2,12 @@ import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { useCompare } from "../context/CompareContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../api/axios";
 import {
     Bars3Icon, XMarkIcon, UserCircleIcon, HeartIcon,
     SunIcon, MoonIcon, ArrowRightStartOnRectangleIcon, ScaleIcon,
+    ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 
 export default function MainLayout() {
@@ -14,6 +16,21 @@ export default function MainLayout() {
     const { compareIds } = useCompare();
     const navigate = useNavigate();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [unreadMessages, setUnreadMessages] = useState(0);
+
+    // Polling для непрочитанных сообщений
+    useEffect(() => {
+        if (!user) return;
+        const loadUnread = async () => {
+            try {
+                const res = await api.get("/messages-unread-count");
+                setUnreadMessages(res.data.count || 0);
+            } catch {}
+        };
+        loadUnread();
+        const interval = setInterval(loadUnread, 10000); // каждые 10 сек
+        return () => clearInterval(interval);
+    }, [user]);
 
     const handleLogout = async () => {
         await logout();
@@ -45,7 +62,6 @@ export default function MainLayout() {
                                 {theme === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
                             </button>
 
-                            {/* Иконка сравнения с счётчиком */}
                             <Link to="/compare" className="relative text-content-secondary hover:text-accent transition-colors p-2 rounded-lg hover:bg-surface-tertiary" title="Salīdzinājums">
                                 <ScaleIcon className="w-5 h-5" />
                                 {compareIds.length > 0 && (
@@ -57,6 +73,15 @@ export default function MainLayout() {
 
                             {user ? (
                                 <>
+                                    {/* Иконка чата */}
+                                    <Link to="/chat" className="relative text-content-secondary hover:text-accent transition-colors" title={user.role === "admin" ? "Ziņojumi" : "Atbalsts"}>
+                                        <ChatBubbleLeftRightIcon className="w-5 h-5" />
+                                        {unreadMessages > 0 && (
+                                            <span className="absolute -top-1 -right-1 bg-status-danger text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center animate-pulse">
+                                                {unreadMessages}
+                                            </span>
+                                        )}
+                                    </Link>
                                     <Link to="/favorites" className="text-content-secondary hover:text-accent transition-colors">
                                         <HeartIcon className="w-5 h-5" />
                                     </Link>
@@ -79,12 +104,14 @@ export default function MainLayout() {
                         <div className="flex items-center gap-3 md:hidden">
                             <Link to="/compare" className="relative text-content-secondary p-2">
                                 <ScaleIcon className="w-5 h-5" />
-                                {compareIds.length > 0 && (
-                                    <span className="absolute -top-0 -right-0 bg-accent text-content-inverted text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                                        {compareIds.length}
-                                    </span>
-                                )}
+                                {compareIds.length > 0 && <span className="absolute top-0 right-0 bg-accent text-content-inverted text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">{compareIds.length}</span>}
                             </Link>
+                            {user && (
+                                <Link to="/chat" className="relative text-content-secondary p-2">
+                                    <ChatBubbleLeftRightIcon className="w-5 h-5" />
+                                    {unreadMessages > 0 && <span className="absolute top-0 right-0 bg-status-danger text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">{unreadMessages}</span>}
+                                </Link>
+                            )}
                             <button onClick={toggleTheme} className="text-content-secondary p-2">
                                 {theme === "dark" ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
                             </button>
@@ -103,13 +130,12 @@ export default function MainLayout() {
                             <Link to="/contact" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Kontakti</Link>
                             {user ? (
                                 <>
+                                    <Link to="/chat" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>{user.role === "admin" ? "Ziņojumi" : "Atbalsts"}{unreadMessages > 0 && ` (${unreadMessages})`}</Link>
                                     <Link to="/dashboard" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Mans profils</Link>
                                     <Link to="/transactions" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Darījumi</Link>
                                     <Link to="/favorites" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Izlase</Link>
                                     {user.role === "admin" && <Link to="/admin" className="block py-2 text-content-secondary hover:text-accent" onClick={() => setMobileMenuOpen(false)}>Administrācija</Link>}
-                                    <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="flex items-center gap-2 py-2 text-status-danger">
-                                        <ArrowRightStartOnRectangleIcon className="w-4 h-4" /> Iziet
-                                    </button>
+                                    <button onClick={() => { handleLogout(); setMobileMenuOpen(false); }} className="flex items-center gap-2 py-2 text-status-danger"><ArrowRightStartOnRectangleIcon className="w-4 h-4" /> Iziet</button>
                                 </>
                             ) : (
                                 <>

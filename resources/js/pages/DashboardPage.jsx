@@ -129,9 +129,11 @@ export default function DashboardPage() {
                         <button onClick={() => setShowDeleteModal(true)} className="text-status-danger hover:text-red-400 text-sm font-medium transition-colors">
                             Dzēst kontu
                         </button>
-                        <Link to="/admin" className="text-accent hover:text-accent-hover text-sm font-medium transition-colors">
-                            Statistika →
-                        </Link>
+                        {user?.role === "admin" && (
+    <Link to="/admin" className="text-accent hover:text-accent-hover text-sm font-medium transition-colors">
+        Statistika →
+    </Link>
+)}
                     </div>
                 </div>
             </AnimateIn>
