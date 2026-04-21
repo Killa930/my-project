@@ -26,6 +26,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import UsersManagementPage from "./pages/UsersManagementPage";
 import ChatPage from "./pages/ChatPage";
+import EditProfilePage from "./pages/EditProfilePage";
 
 function App() {
     return (
@@ -54,6 +55,7 @@ function App() {
                                         <Route path="/favorites" element={<FavoritesPage />} />
                                         <Route path="/transactions" element={<TransactionsPage />} />
                                         <Route path="/chat" element={<ChatPage />} />
+                                        <Route path="/profile/edit" element={<EditProfilePage />} />
                                     </Route>
 
                                     <Route element={<AdminRoute />}>

@@ -123,6 +123,9 @@ export default function DashboardPage() {
                     </div>
                     {/* Ссылки профиля */}
                     <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-border">
+                        <Link to="/profile/edit" className="text-accent hover:text-accent-hover text-sm font-medium transition-colors">
+                        Rediģēt profilu →
+                        </Link>
                         <Link to="/transactions" className="text-accent hover:text-accent-hover text-sm font-medium transition-colors">
                             Mani darījumi →
                         </Link>
@@ -130,10 +133,11 @@ export default function DashboardPage() {
                             Dzēst kontu
                         </button>
                         {user?.role === "admin" && (
-    <Link to="/admin" className="text-accent hover:text-accent-hover text-sm font-medium transition-colors">
-        Statistika →
-    </Link>
-)}
+                            <Link to="/admin" className="text-accent hover:text-accent-hover text-sm font-medium transition-colors">
+                                Statistika →
+                            </Link>
+                        )}
+
                     </div>
                 </div>
             </AnimateIn>

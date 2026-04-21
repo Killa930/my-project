@@ -24,6 +24,7 @@ Route::get('/reviews', [ReviewController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
+    Route::put('/profile', [AuthController::class, 'updateProfile']); // НОВЫЙ
     Route::delete('/account', [AuthController::class, 'deleteAccount']);
 
     Route::post('/cars', [CarController::class, 'store']);
@@ -45,7 +46,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/users/{user}/unblock', [UserController::class, 'unblock']);
     Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
-    // ЧАТ
     Route::get('/conversations', [MessageController::class, 'conversations']);
     Route::get('/messages/{user}', [MessageController::class, 'messages']);
     Route::post('/messages', [MessageController::class, 'store']);
