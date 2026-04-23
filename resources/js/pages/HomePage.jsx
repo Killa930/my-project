@@ -41,13 +41,22 @@ export default function HomePage() {
                         </p>
                     </AnimateIn>
                     <AnimateIn delay={400}>
-                        <form onSubmit={handleSearch} className="max-w-2xl mx-auto flex gap-3">
-                            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                                placeholder="Meklēt marku, modeli..."
-                                className="flex-1 bg-surface-tertiary border border-border text-content-primary rounded-xl px-5 py-4 text-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent placeholder-content-muted transition-colors" />
-                            <button type="submit" className="bg-accent hover:bg-accent-hover text-content-inverted px-8 py-4 rounded-xl font-bold text-lg transition-colors whitespace-nowrap">Meklēt</button>
-                        </form>
-                    </AnimateIn>
+    <form onSubmit={handleSearch} className="max-w-2xl mx-auto flex flex-col sm:flex-row gap-3 px-4 sm:px-0">
+        <input 
+            type="text" 
+            value={searchQuery} 
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Meklēt marku, modeli..."
+            className="flex-1 min-w-0 bg-surface-tertiary border border-border text-content-primary rounded-xl px-5 py-4 text-lg focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent placeholder-content-muted transition-colors" 
+        />
+        <button 
+            type="submit" 
+            className="shrink-0 bg-accent hover:bg-accent-hover text-content-inverted px-8 py-4 rounded-xl font-bold text-lg transition-colors whitespace-nowrap"
+        >
+            Meklēt
+        </button>
+    </form>
+</AnimateIn>
                     <AnimateIn delay={550}>
                         <div className="flex flex-wrap justify-center gap-3 mt-8">
                             {["BMW", "Audi", "Mercedes-Benz", "Volkswagen", "Toyota", "Volvo"].map((brand) => (
