@@ -47,7 +47,7 @@ export default function MainLayout() {
                                 <span className="text-content-inverted font-black text-sm">CB</span>
                             </div>
                             <span className="text-xl font-bold tracking-tight">
-                                <span className="text-accent">Car</span>
+                                <span className="text-accent">Ca</span>
                                 <span className="text-content-primary">Buy</span>
                             </span>
                         </Link>
