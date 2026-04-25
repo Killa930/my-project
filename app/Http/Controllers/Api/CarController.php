@@ -85,7 +85,7 @@ class CarController extends Controller
             'color'         => 'required|string|max:50',
             'description'   => 'nullable|string|max:5000',
             'images'        => 'required|array|min:1|max:15',
-            'images.*'      => 'image|mimes:jpeg,png,webp|max:5120',
+            'images.*'      => 'image|mimes:jpeg,png,webp|max:10240',
         ]);
 
         $validated['user_id'] = Auth::id();
