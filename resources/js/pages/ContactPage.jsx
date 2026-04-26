@@ -12,7 +12,7 @@ export default function ContactPage() {
                     {[
                         { icon: <MapPinIcon className="w-5 h-5 text-accent" />, title: "Adrese", lines: ["Dārzciema iela 58", "Rīga, LV-1073, Latvija"] },
                         { icon: <PhoneIcon className="w-5 h-5 text-accent" />, title: "Tālrunis", link: { href: "tel:+37120000000", text: "+371 20 000 000" } },
-                        { icon: <EnvelopeIcon className="w-5 h-5 text-accent" />, title: "E-pasts", link: { href: "mailto:info@carbuy.lv", text: "info@carbuy.lv" } },
+                        { icon: <EnvelopeIcon className="w-5 h-5 text-accent" />, title: "E-pasts", link: { href: "mailto:info@abuy.lv", text: "info@abuy.lv" } },
                         { icon: <ClockIcon className="w-5 h-5 text-accent" />, title: "Darba laiks", lines: ["P.–Pk.: 9:00–18:00", "S.–Sv.: slēgts"] },
                     ].map((item, i) => (
                         <AnimateIn key={i} delay={i * 100}>

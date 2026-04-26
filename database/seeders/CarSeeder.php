@@ -15,7 +15,7 @@ class CarSeeder extends Seeder
     public function run(): void
     {
         $admin = User::firstOrCreate(
-            ['email' => 'admin@carbuy.lv'],
+            ['email' => 'admin@abuy.lv'],
             [
                 'name' => 'Administrators',
                 'password' => Hash::make('password'),
@@ -25,7 +25,7 @@ class CarSeeder extends Seeder
         );
  
         $user = User::firstOrCreate(
-            ['email' => 'user@carbuy.lv'],
+            ['email' => 'user@abuy.lv'],
             [
                 'name' => 'Jānis Bērziņš',
                 'password' => Hash::make('password'),

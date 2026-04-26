@@ -44,11 +44,11 @@ export default function MainLayout() {
                     <div className="flex items-center justify-between h-16">
                         <Link to="/" className="flex items-center gap-2">
                             <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
-                                <span className="text-content-inverted font-black text-sm">CB</span>
+                                <span className="text-content-inverted font-black text-sm">AB</span>
                             </div>
                             <span className="text-xl font-bold tracking-tight">
-                                <span className="text-accent">Ca</span>
-                                <span className="text-content-primary">Buy</span>
+                                <span className="text-accent">A</span>
+                                <span className="text-content-primary">BUY</span>
                             </span>
                         </Link>
 
@@ -155,8 +155,8 @@ export default function MainLayout() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         <div>
                             <div className="flex items-center gap-2 mb-3">
-                                <div className="w-7 h-7 bg-accent rounded-md flex items-center justify-center"><span className="text-content-inverted font-black text-xs">CB</span></div>
-                                <span className="text-lg font-bold"><span className="text-accent">Car</span><span className="text-content-primary">Buy</span></span>
+                                <div className="w-7 h-7 bg-accent rounded-md flex items-center justify-center"><span className="text-content-inverted font-black text-xs">AB</span></div>
+                                <span className="text-lg font-bold"><span className="text-accent">A</span><span className="text-content-primary">BUY</span></span>
                             </div>
                             <p className="text-content-muted text-sm">Lietotu automašīnu tirdzniecības platforma.</p>
                         </div>
@@ -172,13 +172,13 @@ export default function MainLayout() {
                         </div>
                         <div>
                             <h3 className="text-content-primary font-semibold mb-3">Kontakti</h3>
-                            <p className="text-content-muted text-sm">info@carbuy.lv</p>
+                            <p className="text-content-muted text-sm">info@abuy.lv</p>
                             <p className="text-content-muted text-sm">+371 20 000 000</p>
                             <p className="text-content-muted text-sm">Rīga, Latvija</p>
                         </div>
                     </div>
                     <div className="border-t border-border mt-8 pt-6 text-center">
-                        <p className="text-content-muted text-sm">© {new Date().getFullYear()} CarBuy. Noslēguma darbs.</p>
+                        <p className="text-content-muted text-sm">© {new Date().getFullYear()} ABUY. Noslēguma darbs.</p>
                     </div>
                 </div>
             </footer>
