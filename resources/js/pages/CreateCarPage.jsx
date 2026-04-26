@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import imageCompression from "browser-image-compression";
 import { PhotoIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function CreateCarPage() {
@@ -26,7 +27,22 @@ export default function CreateCarPage() {
     const handleSubmit = async (e) => {
         e.preventDefault(); setErrors({}); setLoading(true);
         const fd = new FormData();
-        Object.entries(form).forEach(([k, v]) => { if (k === "images") { v.forEach((f) => fd.append("images[]", f)); } else if (v) { fd.append(k, v); } });
+
+        // Все поля кроме images
+        Object.entries(form).forEach(([k, v]) => {
+            if (k !== "images" && v) fd.append(k, v);
+        });
+
+        // Сжимаем фотки перед отправкой: 5 МБ → ~300 KB
+        for (const f of form.images) {
+            const compressed = await imageCompression(f, {
+                maxSizeMB: 0.5,
+                maxWidthOrHeight: 1600,
+                useWebWorker: true,
+            });
+            fd.append("images[]", compressed);
+        }
+
         try { const res = await api.post("/cars", fd, { headers: { "Content-Type": "multipart/form-data" } }); navigate(`/cars/${res.data.id}`); }
         catch (err) { if (err.response?.data?.errors) setErrors(err.response.data.errors); }
         finally { setLoading(false); }
