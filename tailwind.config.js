@@ -1,4 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
+import scrollbar from 'tailwind-scrollbar';
+
 export default {
     content: ["./resources/**/*.{js,jsx,ts,tsx,blade.php}"],
     theme: {
@@ -52,5 +55,5 @@ export default {
             },
         },
     },
-    plugins: [],
+    plugins: [scrollbar({ nocompatible: true }),],
 };

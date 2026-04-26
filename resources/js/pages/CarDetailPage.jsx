@@ -6,6 +6,7 @@ import { useToast } from "../context/ToastContext";
 import AnimateIn from "../components/AnimateIn";
 import { HeartIcon, PhoneIcon, ArrowLeftIcon } from "@heroicons/react/24/outline";
 import { HeartIcon as HeartSolidIcon, StarIcon as StarSolidIcon } from "@heroicons/react/24/solid";
+import ImageGalleryModal from "../components/ImageGalleryModal";
 
 const fuelLabels = { petrol: "Benzīns", diesel: "Dīzelis", electric: "Elektriskais", hybrid: "Hibrīds", petrol_lpg: "Benz./gāze" };
 const bodyLabels = { sedan: "Sedans", hatchback: "Hečbeks", wagon: "Universāls", suv: "Apvidus", coupe: "Kupeja", cabriolet: "Kabriolets", minivan: "Minivens", pickup: "Pikaps", other: "Cits" };
@@ -21,6 +22,7 @@ export default function CarDetailPage() {
     const [isFavorite, setIsFavorite] = useState(false);
     const [activeImage, setActiveImage] = useState(0);
     const [sellerRating, setSellerRating] = useState({ avg: 0, total: 0 });
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         api.get(`/cars/${id}`)
@@ -102,16 +104,18 @@ export default function CarDetailPage() {
                 {/* Фото — 3 колонки */}
                 <div className="lg:col-span-3">
                     <AnimateIn animation="fade" delay={100}>
-                        <div className="aspect-[16/10] bg-surface-secondary rounded-xl overflow-hidden border border-border">
+                        <div className="aspect-[16/10] bg-surface-secondary rounded-xl overflow-hidden border border-border cursor-zoom-in group"
+                        onClick={() => setModalOpen(true)}
+                        >
                             <img
-                                src={images[activeImage]?.image_path ? `/storage/${images[activeImage].image_path}` : "/images/car-placeholder.svg"}
-                                alt={`${manufacturer} ${model}`}
-                                className="w-full h-full object-cover"
-                                onError={(e) => { e.target.src = "/images/car-placeholder.svg"; }}
+                            src={images[activeImage]?.image_path ? `/storage/${images[activeImage].image_path}` : "/images/car-placeholder.svg"}
+                            alt={`${manufacturer} ${model}`}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => { e.target.src = "/images/car-placeholder.svg"; }}
                             />
-                        </div>
+                            </div>
                         {images.length > 1 && (
-                            <div className="flex gap-2 mt-3 overflow-x-auto">
+                            <div className="flex gap-2 mt-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-border-hover scrollbar-track-surface-secondary hover:scrollbar-thumb-content-muted">
                                 {images.map((img, i) => (
                                     <button
                                         key={i}
@@ -285,7 +289,19 @@ export default function CarDetailPage() {
                         )}
                     </div>
                 </AnimateIn>
+
             </div>
+
+            {/* Модалка просмотра фото */}
+            {modalOpen && (
+                <ImageGalleryModal
+                images={images}
+                initialIndex={activeImage}
+                onClose={() => setModalOpen(false)}
+                />
+                )}
+
         </div>
+        
     );
 }
