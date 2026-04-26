@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import api from "../api/axios";
 import { useAuth } from "../context/AuthContext";
 import { PhotoIcon, XMarkIcon, UserIcon } from "@heroicons/react/24/outline";
+import imageCompression from "browser-image-compression";
 
 export default function SellPage() {
     const { user } = useAuth();
@@ -60,10 +61,19 @@ export default function SellPage() {
         fd.append("transmission", form.transmission);
         if (form.engine_volume) fd.append("engine_volume", form.engine_volume);
         fd.append("color", form.color);
-        if (form.description) fd.append("description", form.description);
-        form.images.forEach((f) => fd.append("images[]", f));
+if (form.description) fd.append("description", form.description);
 
-        try {
+// Сжимаем фотки перед отправкой: 5 МБ → ~300 KB
+for (const f of form.images) {
+    const compressed = await imageCompression(f, {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 1600,
+        useWebWorker: true,
+    });
+    fd.append("images[]", compressed);
+}
+
+try {
             const res = await api.post("/cars", fd, { headers: { "Content-Type": "multipart/form-data" } });
             navigate(`/cars/${res.data.id}`);
         } catch (err) {
