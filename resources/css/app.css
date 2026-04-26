@@ -11,21 +11,22 @@ html, body {
 }
 
 :root {
-  --surface-primary:   255 255 255;
-  --surface-secondary: 249 250 251;
-  --surface-tertiary:  243 244 246;
+    --surface-primary:   248 250 252; 
+    --surface-secondary: 255 255 255;
+    --surface-tertiary:  241 245 249;
 
-  --border-default:    229 231 235;
-  --border-hover:      209 213 219;
 
-  --content-primary:   17 24 39;
-  --content-secondary: 75 85 99;
-  --content-muted:     156 163 175;
-  --content-inverted:  255 255 255;
+    --border-default:    203 213 225;
+    --border-hover:      148 163 184;
 
-  --status-success-bg: rgba(16, 185, 129, 0.1);
-  --status-danger-bg:  rgba(239, 68, 68, 0.1);
-  --status-warning-bg: rgba(245, 158, 11, 0.1);
+    --content-primary:   15 23 42;      
+    --content-secondary: 71 85 105;     
+    --content-muted:     100 116 139;   
+    --content-inverted:  255 255 255;
+
+    --status-success-bg: rgba(16, 185, 129, 0.1);
+    --status-danger-bg:  rgba(239, 68, 68, 0.1);
+    --status-warning-bg: rgba(245, 158, 11, 0.1);
 }
 
 
