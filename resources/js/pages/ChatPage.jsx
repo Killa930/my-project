@@ -90,6 +90,19 @@ export default function ChatPage() {
         } finally { setSending(false); }
     };
 
+    const handleResolve = async () => {
+    if (!confirm(`Vai tiešām dzēst saraksti ar ${activeUser.name}?`)) return;
+    try {
+        await api.delete(`/messages/${activeUser.id}`);
+        toast.success("Saruna dzēsta");
+        setActiveUser(null);
+        setMessages([]);
+        loadConversations();
+    } catch {
+        toast.error("Kļūda dzēšot");
+    }
+};
+
     return (
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
             <AnimateIn animation="fade">
@@ -151,15 +164,26 @@ export default function ChatPage() {
                     ) : (
                         <>
                             {/* Заголовок чата */}
-                            <div className="p-4 border-b border-border flex items-center gap-3">
-                                <div className="w-10 h-10 bg-accent-subtle rounded-full flex items-center justify-center">
-                                    <span className="text-accent font-bold">{activeUser.name?.charAt(0)?.toUpperCase()}</span>
-                                </div>
-                                <div>
-                                    <p className="text-content-primary font-semibold">{activeUser.name}</p>
-                                    <p className="text-content-muted text-xs">{activeUser.role === "admin" ? "Administrators" : "Lietotājs"}</p>
-                                </div>
-                            </div>
+<div className="p-4 border-b border-border flex items-center justify-between gap-3">
+    <div className="flex items-center gap-3">
+        <div className="w-10 h-10 bg-accent-subtle rounded-full flex items-center justify-center">
+            <span className="text-accent font-bold">{activeUser.name?.charAt(0)?.toUpperCase()}</span>
+        </div>
+        <div>
+            <p className="text-content-primary font-semibold">{activeUser.name}</p>
+            <p className="text-content-muted text-xs">{activeUser.role === "admin" ? "Administrators" : "Lietotājs"}</p>
+        </div>
+    </div>
+    {/* Кнопка "Atrisināts" — только для админа */}
+    {isAdmin && (
+        <button
+            onClick={handleResolve}
+            className="bg-status-success/10 hover:bg-status-success/20 text-status-success px-4 py-2 rounded-lg font-semibold text-sm transition-colors"
+        >
+            ✓ Atrisināts
+        </button>
+    )}
+</div>
 
                             {/* Сообщения */}
                             <div className="flex-1 overflow-y-auto p-4 space-y-3">

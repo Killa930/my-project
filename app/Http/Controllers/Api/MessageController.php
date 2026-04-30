@@ -140,4 +140,25 @@ class MessageController extends Controller
 
         return response()->json(['count' => $count]);
     }
+
+    /*
+ * Удалить всю переписку с пользователем (только админ).
+ * Используется когда админ решил проблему пользователя.
+ */
+public function destroy(User $user)
+{
+    if (!Auth::user()->isAdmin()) {
+        return response()->json(['message' => 'Nav tiesību'], 403);
+    }
+
+    $myId = Auth::id();
+
+    Message::where(function ($q) use ($myId, $user) {
+        $q->where('sender_id', $myId)->where('receiver_id', $user->id);
+    })->orWhere(function ($q) use ($myId, $user) {
+        $q->where('sender_id', $user->id)->where('receiver_id', $myId);
+    })->delete();
+
+    return response()->json(['message' => 'Saruna dzēsta']);
+}
 }

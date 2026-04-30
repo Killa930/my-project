@@ -50,4 +50,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/messages/{user}', [MessageController::class, 'messages']);
     Route::post('/messages', [MessageController::class, 'store']);
     Route::get('/messages-unread-count', [MessageController::class, 'unreadCount']);
+    Route::delete('/messages/{user}', [MessageController::class, 'destroy']);
 });
